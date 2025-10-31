@@ -14,7 +14,7 @@ const Signup: React.FC<AuthComponentProps> = ({ onSuccess }) => {
   const [name, setName] = useState(''); 
   const [loading, setLoading] = useState(false);
 
-  const handleSignup = async (e) => {
+  const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
