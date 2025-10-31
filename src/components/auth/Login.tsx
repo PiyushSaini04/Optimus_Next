@@ -4,14 +4,14 @@ import { Input } from "../ui/input"
 import { Button } from "../ui/button"
 import { Label } from "../ui/label"
 import { toast } from 'sonner'
-import client from "@/api/client" // Assuming your Supabase client import
+import client from "@/api/client"
+import { AuthComponentProps } from './Auth';
 
-const Login = () => {
+const Login: React.FC<AuthComponentProps> = ({ onSuccess }) => { 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // --- Login Handler ---
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -23,18 +23,17 @@ const Login = () => {
     }
 
     try {
-      // Supabase Sign In (Login)
       const { error } = await client.auth.signInWithPassword({
         email, 
         password,
       });
 
       if (error) {
-        // Supabase often returns vague error messages for security (e.g., "Invalid login credentials")
         toast.error(`Login failed: ${error.message}`);
       } else {
         toast.success('Login successful! Welcome back.');
-        // Optional: Redirect the user to their dashboard or clear fields
+        onSuccess(); 
+        
         setEmail('');
         setPassword('');
       }
@@ -47,7 +46,6 @@ const Login = () => {
     }
   }
 
-  // --- Forgot Password Handler ---
   const handleForgotPassword = async () => {
     if (!email) {
       toast.warning('Please enter your email address to receive the password reset link.');
@@ -55,9 +53,8 @@ const Login = () => {
     }
 
     try {
-      // Supabase Password Reset Function
       const { error } = await client.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/update-password`, // Replace with your actual password update page URL
+        redirectTo: `${window.location.origin}/update-password`,
       });
 
       if (error) {
@@ -105,10 +102,9 @@ const Login = () => {
             />
           </div>
           
-          {/* Forgot Password Link */}
           <div className="flex justify-end pt-1">
             <button
-              type="button" // Use type="button" to prevent form submission
+              type="button"
               onClick={handleForgotPassword}
               className="text-sm text-primary hover:underline"
               disabled={loading}
