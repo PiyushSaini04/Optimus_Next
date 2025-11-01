@@ -242,7 +242,7 @@ const Navbar: React.FC = () => {
                                     >
                                         {/* Use the updated list for the dashboard link */}
                                         {updatedProfileMenuItems.map((item) => (
-                                            <Link key={item.name} href={item.href} legacyBehavior>
+                                            <Link key={item.name} href={item.href}>
                                                 <a
                                                     // Only handle Logout with a special function
                                                     onClick={item.name === 'Logout' ? handleLogout : () => setIsProfileMenuOpen(false)}
