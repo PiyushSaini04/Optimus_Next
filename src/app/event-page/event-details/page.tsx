@@ -198,6 +198,10 @@ export default function EventDetailsPage() {
     const isPaid = (event.ticket_price ?? 0) > 0;
     const isUpcoming = event.status === 'approved' || event.status === 'pending';
 
+    const handleregistration = () => {
+        router.push(`/event-page/${event.id}/register`);
+    }
+
     // --- Render Main Page ---
     return (
         <div className="min-h-screen bg-gray-900 text-white font-sans">
@@ -345,7 +349,7 @@ export default function EventDetailsPage() {
 
                         {/* Action Buttons */}
                         <button
-                            onClick={() => alert('Registering for event... (Not Implemented)')}
+                            onClick={handleregistration}
                             className="w-full py-3 bg-green-600 text-white text-lg font-bold rounded-lg shadow-md hover:bg-green-700 transition duration-150"
                         >
                             Register for Event

@@ -54,35 +54,30 @@ interface CreateEventButtonProps {
 
 const CreateEventButton: React.FC<CreateEventButtonProps> = ({ organization, onClick }) => {
     const isOrganizationRegistered = !!organization;
+    const router = useRouter();
     
-    const buttonElement = (
-        <Button
-            onClick={isOrganizationRegistered ? onClick : undefined}
-            disabled={!isOrganizationRegistered}
-            className={`h-10 text-white font-medium ml-auto 
-                ${isOrganizationRegistered 
-                    ? 'bg-green-600 hover:bg-green-700' 
-                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                }`}
-        >
-            Create New Event
-        </Button>
-    );
+    const handleclick = () => {
+        router.push('/form/create-event');
+    }
 
-    if (!isOrganizationRegistered) {
+    
         return (
             <div className="relative inline-block group">
-                {buttonElement}
-                <span className="absolute bottom-full right-0 transform translate-x-1/2 mb-2 
+                <Button
+                    onClick={handleclick}
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg shadow-md disabled:opacity-50"
+                >
+                    Create New Event
+                </Button>
+                {/* <span className="absolute bottom-full right-0 transform translate-x-1/2 mb-2 
                              px-3 py-1 text-xs text-white bg-gray-700 rounded-lg 
                              opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap z-50">
                     ⚠️ Register the organization first
-                </span>
+                </span> */}
             </div>
         );
-    }
+    
 
-    return buttonElement;
 };
 
 
@@ -217,10 +212,7 @@ const DashboardPage = () => {
             <div className="grid grid-cols-12 gap-6">
                 
                 <div className="col-span-12 lg:col-span-4">
-                    <OrganizationBox 
-                        onSuccess={handleRegisterOrgClick} 
-                        currentUserId={profile?.uuid ?? ""}
-                    />
+                    <OrganizationBox />
                 </div>
                 
                 <div className="col-span-12 md:col-span-6 lg:col-span-4">

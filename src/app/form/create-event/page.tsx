@@ -2,6 +2,7 @@
 "use client";
 
 import React, { useState, FormEvent, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import supabase from '@/api/client'; // Adjust path to your Supabase client
 import { User } from '@supabase/supabase-js';
 
@@ -43,6 +44,7 @@ const BUCKET_NAME = 'event_banners';
 
 // --- 2. Main Component ---
 export default function CreateEventPage() {
+    const router = useRouter();
     const [formData, setFormData] = useState<EventFormData>(initialFormData);
     const [bannerFile, setBannerFile] = useState<File | null>(null); // New state for the file
     const [user, setUser] = useState<User | null>(null);
@@ -100,13 +102,15 @@ export default function CreateEventPage() {
 
         // Get the public URL for the uploaded file
         const { data } = supabase.storage
-            .from(BUCKET_NAME)
-            .getPublicUrl(filePath);
-
+        .from(BUCKET_NAME)
+        .getPublicUrl(filePath);
+        
         return data.publicUrl;
     };
-
+    
     /** Submits the form data to the Supabase 'events' table. */
+    // Assuming 'router' is available via useRouter() in the component scope
+// Assuming 'router' is available via useRouter() in the component scope
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setLoading(true);
@@ -131,40 +135,45 @@ export default function CreateEventPage() {
             finalBannerUrl = url;
         }
 
-
-        // --- STEP 2: PREPARE DATA FOR POSTGRES INSERT ---
-        // 1. Filter out keys where the value is explicitly null or empty string
         const baseDataToInsert = Object.fromEntries(
             Object.entries(formData).filter(([, value]) => value !== null && value !== '')
         ) as Partial<EventFormData>;
 
-        // 2. Add the created_by UUID and the final banner URL
         const dataToInsert = {
             ...baseDataToInsert,
             created_by: user.id, 
-            banner_url: finalBannerUrl, // Insert the obtained URL (or null)
+            banner_url: finalBannerUrl,
         };
-        
-        // 3. Ensure banner_url is removed if it's null, to avoid inserting a column that might not be in the table structure if the property is optional.
+
         if (dataToInsert.banner_url === null) {
-            delete dataToInsert.banner_url;
+            delete (dataToInsert as Record<string, any>).banner_url;
         }
 
-        // --- STEP 3: INSERT EVENT DATA TO POSTGRES ---
-        const { error } = await supabase
-            .from('events') // **Double-check your table name is 'events'**
-            .insert([dataToInsert]);
+        // --- STEP 3: INSERT EVENT DATA & CAPTURE THE NEW ID ---
+        // Added .select('id') to return the newly created record's ID
+        const { data: newEvent, error } = await supabase
+            .from('events')
+            .insert([dataToInsert])
+            .select('id') // Key modification: Selects the ID of the new row
+            .single(); // Expects one row back
 
         setLoading(false);
 
         if (error) {
             console.error('Error creating event:', error);
             setMessage({ type: 'error', text: `Failed to create event: ${error.message}` });
+        } else if (newEvent && newEvent.id) {
+            // --- STEP 4: SUCCESS AND REDIRECT TO FORM BUILDER ---
+            setMessage({ type: 'success', text: 'Event created successfully! Redirecting to form builder...' });
+            setFormData(initialFormData);
+            setBannerFile(null);
+            
+            // **Navigation logic added here**
+            router.push(`/event-page/${newEvent.id}/builder`);
+            
         } else {
-            setMessage({ type: 'success', text: 'Event created successfully! Banner uploaded.' });
-            setFormData(initialFormData); // Reset form
-            setBannerFile(null); // Reset file input state
-            // Note: Manually reset file input element if needed (often not necessary with full state reset)
+            // Fallback if insertion was successful but did not return the ID
+            setMessage({ type: 'error', text: 'Event created, but failed to get the new ID for redirection.' });
         }
     };
 
@@ -333,7 +342,7 @@ export default function CreateEventPage() {
                             disabled={loading || !user}
                             className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
                         >
-                            {loading ? 'Submitting...' : 'Create Event'}
+                            {loading ? 'Submitting...' : 'Create Form'}
                         </button>
                     </div>
                 </form>

@@ -163,10 +163,12 @@ const Navbar: React.FC = () => {
                         {/* Desktop Navigation Links */}
                         <div className="hidden md:flex space-x-4">
                             {navItems.map((item) => (
-                                <Link key={item.name} href={item.href} legacyBehavior>
-                                    <a className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out">
-                                        {item.name}
-                                    </a>
+                               <Link 
+                                    key={item.name} 
+                                    href={item.href} 
+                                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out"
+                                    >
+                                    {item.name}
                                 </Link>
                             ))}
                         </div>

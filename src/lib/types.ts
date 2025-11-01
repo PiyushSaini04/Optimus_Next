@@ -19,3 +19,4 @@ export interface Event {
   type: 'Participated' | 'Hosted';
   is_upcoming: boolean;
 }
+
