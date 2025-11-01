@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import client from '../../api/client';
 
+
 // --- Define types for context values ---
 interface AuthContextType {
   user: any | null;
@@ -44,6 +45,12 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 };
 
 // Optional: Custom hook for accessing context easily
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+};
 
 export { AuthProvider, AuthContext };

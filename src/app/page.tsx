@@ -1,7 +1,7 @@
 'use client';
 
 import React from "react";
-import useAuth from "@/hooks/useAuth";
+import { useAuth } from "@/components/context/authprovider";
 import { useRouter } from "next/navigation";
 import HomePage from "./home/page"; 
 import Navbar from "@/components/navbar/page";
