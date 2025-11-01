@@ -1,3 +1,5 @@
+// src/app/event-page/page.tsx
+
 'use client';
 
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
