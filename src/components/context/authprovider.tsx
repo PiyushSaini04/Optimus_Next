@@ -1,22 +1,32 @@
 'use client';
-import { createContext, useContext, useState, useEffect, use } from 'react';
-import supabase from '../../api/client';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import client from '../../api/client';
 
-const AuthContext = createContext<any>(null);
+// --- Define types for context values ---
+interface AuthContextType {
+  user: any | null;
+  loading: boolean;
+}
 
-const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+// Create context with default null
+const AuthContext = createContext<AuthContextType | null>(null);
+
+// --- Type for children (Fixes your error) ---
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const [user, setUser] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-
     client.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user || null);
       setLoading(false);
     });
 
-    const { data: authListener } = client.auth.onAuthStateChange((event, session) => {
+    const { data: authListener } = client.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user || null);
       setLoading(false);
     });
@@ -24,14 +34,16 @@ const AuthProvider = ({ children }) => {
     return () => {
       authListener.subscription.unsubscribe();
     };
+  }, []);
 
-    }, []);
-
-    return (
+  return (
     <AuthContext.Provider value={{ user, loading }}>
       {children}
     </AuthContext.Provider>
   );
-}
+};
+
+// Optional: Custom hook for accessing context easily
+export const useAuth = () => useContext(AuthContext);
 
 export { AuthProvider, AuthContext };
