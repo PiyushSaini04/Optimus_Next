@@ -1,4 +1,5 @@
-// types/event.ts
+// lib/types/event.ts
+
 export interface FormField {
   id: string;
   event_id: string;
@@ -8,7 +9,7 @@ export interface FormField {
   options: {
     values: string[];
   } | null;
-  order: number;
+  order: number; // Used for sorting form fields
 }
 
 export type DynamicFormData = Record<string, string | string[]>;
