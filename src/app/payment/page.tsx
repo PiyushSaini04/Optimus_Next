@@ -51,16 +51,16 @@ const PaymentPage = () => {
         }
     };
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900">
             <Script
                 src="https://checkout.razorpay.com/v1/checkout.js" />
-                <div className="p-6 bg-white rounded-lg shadow-md">
-                    <h1 className="text-2xl font-bold mb-4">Razorpay Payment Integration</h1>
-                    <p className="mb-6">Amount to be paid: ₹{Amount} INR</p>
+                <div className="p-6 bg-gray-800/90 border border-gray-700 rounded-xl shadow-md">
+                    <h1 className="text-2xl font-bold mb-4 text-white">Razorpay Payment Integration</h1>
+                    <p className="mb-6 text-gray-300">Amount to be paid: ₹{Amount} INR</p>
                     <button
                         onClick={handlePayment}
                         disabled={isPaymentProcessing}
-                        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+                        className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 font-bold"
                         >
                         {isPaymentProcessing ? "Processing..." : "Pay Now"}
                     </button>

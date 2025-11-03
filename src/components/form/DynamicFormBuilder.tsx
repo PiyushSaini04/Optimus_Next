@@ -70,17 +70,17 @@ const DynamicFormBuilder: React.FC<DynamicFormBuilderProps> = ({ eventId, onSave
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-6 bg-white rounded-lg shadow-xl max-w-2xl mx-auto space-y-6">
-      <h2 className="text-2xl font-bold text-gray-900 border-b pb-3">Event Registration Form Builder</h2>
+    <form onSubmit={handleSubmit} className="p-6 bg-gray-800/90 border border-gray-700 rounded-xl shadow-xl max-w-2xl mx-auto space-y-6">
+      <h2 className="text-2xl font-bold text-green-400 border-b border-gray-700 pb-3">Event Registration Form Builder</h2>
 
       {fields.map((field, index) => (
-        <div key={index} className="p-4 border rounded-md bg-gray-50 space-y-3">
+        <div key={index} className="p-4 border border-gray-700 rounded-md bg-gray-800 space-y-3">
           <div className="flex justify-between items-center">
-            <h3 className="font-semibold text-indigo-600">Field #{index + 1}</h3>
+            <h3 className="font-semibold text-green-400">Field #{index + 1}</h3>
             <button
               type="button"
               onClick={() => handleRemoveField(index)}
-              className="text-red-500 hover:text-red-700 text-sm"
+              className="text-red-400 hover:text-red-500 text-sm"
             >
               Remove
             </button>
@@ -89,23 +89,23 @@ const DynamicFormBuilder: React.FC<DynamicFormBuilderProps> = ({ eventId, onSave
           <div className="grid grid-cols-2 gap-4">
             {/* Field Name */}
             <div>
-              <label className="block text-sm font-medium text-gray-700">Question/Label</label>
+              <label className="block text-sm font-medium text-gray-300">Question/Label</label>
               <input
                 type="text"
                 value={field.field_name}
                 onChange={(e) => handleChange(index, 'field_name', e.target.value)}
                 required
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                className="mt-1 block w-full bg-gray-800 border border-gray-700 rounded-md shadow-sm p-2 text-white"
               />
             </div>
 
             {/* Field Type */}
             <div>
-              <label className="block text-sm font-medium text-gray-700">Field Type</label>
+              <label className="block text-sm font-medium text-gray-300">Field Type</label>
               <select
                 value={field.field_type}
                 onChange={(e) => handleChange(index, 'field_type', e.target.value as FormField['field_type'])}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+                className="mt-1 block w-full bg-gray-800 border border-gray-700 rounded-md shadow-sm p-2 text-white"
               >
                 <option value="text">Text Input</option>
                 <option value="email">Email Input</option>
@@ -119,13 +119,13 @@ const DynamicFormBuilder: React.FC<DynamicFormBuilderProps> = ({ eventId, onSave
           {/* Options Input (Only for select/checkbox) */}
           {(field.field_type === 'select' || field.field_type === 'checkbox') && (
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-gray-300">
                 Options (Comma Separated)
               </label>
               <textarea
                 value={field.options?.values.join(', ') || ''}
                 onChange={(e) => handleChange(index, 'options', e.target.value)}
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 resize-none"
+                className="mt-1 block w-full bg-gray-800 border border-gray-700 rounded-md shadow-sm p-2 text-white resize-none"
                 placeholder="Option 1, Option 2, Other Option"
                 rows={2}
               />
@@ -138,9 +138,9 @@ const DynamicFormBuilder: React.FC<DynamicFormBuilderProps> = ({ eventId, onSave
               type="checkbox"
               checked={field.is_required}
               onChange={(e) => handleChange(index, 'is_required', e.target.checked)}
-              className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+              className="h-4 w-4 text-green-600 border-gray-700 rounded focus:ring-green-500"
             />
-            <label className="ml-2 block text-sm text-gray-900">
+            <label className="ml-2 block text-sm text-gray-300">
               Required Field
             </label>
           </div>
@@ -148,11 +148,11 @@ const DynamicFormBuilder: React.FC<DynamicFormBuilderProps> = ({ eventId, onSave
       ))}
 
       {/* Action Buttons */}
-      <div className="flex justify-between pt-4 border-t">
+      <div className="flex justify-between pt-4 border-t border-gray-700">
         <button
           type="button"
           onClick={handleAddField}
-          className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-indigo-700 bg-indigo-100 hover:bg-indigo-200"
+          className="px-4 py-2 border border-gray-700 rounded-md shadow-sm text-sm font-medium text-green-400 bg-gray-800 hover:bg-gray-700"
         >
           + Add New Field
         </button>
@@ -160,14 +160,14 @@ const DynamicFormBuilder: React.FC<DynamicFormBuilderProps> = ({ eventId, onSave
         <button
           type="submit"
           disabled={saving || fields.length === 0}
-          className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-green-700 disabled:bg-green-400"
+          className="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-bold text-white bg-green-600 hover:bg-green-700 disabled:bg-green-400"
         >
           {saving ? 'Saving...' : 'Save Form Structure'}
         </button>
       </div>
 
       {error && (
-        <p className="text-red-500 text-sm mt-4">{error}</p>
+        <p className="text-red-400 text-sm mt-4">{error}</p>
       )}
     </form>
   );

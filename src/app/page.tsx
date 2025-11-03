@@ -13,15 +13,15 @@ export default function Home() {
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center min-h-screen">
-                <h1 className="text-2xl font-bold text-gray-800">Loading...</h1>
+            <div className="flex justify-center items-center min-h-screen bg-gray-900">
+                <h1 className="text-2xl font-bold text-white">Loading...</h1>
             </div>
         );
     }
 
     return (
         <>
-            <Navbar/>
+            {/* <Navbar/> */}
             
             <HomePage />
             

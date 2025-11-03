@@ -69,10 +69,10 @@ const Login: React.FC<AuthComponentProps> = ({ onSuccess }) => {
   }
 
   return (
-    <Card className="w-[350px]">
+    <Card className="w-[350px] bg-gray-800/90 border-gray-700">
       <CardHeader>
-        <CardTitle>Login</CardTitle>
-        <CardDescription>Sign in to your account</CardDescription>
+        <CardTitle className="text-green-400 border-b border-gray-700 pb-2">Login</CardTitle>
+        <CardDescription className="text-gray-300">Sign in to your account</CardDescription>
       </CardHeader>
       
       <form onSubmit={handleLogin}>
@@ -106,7 +106,7 @@ const Login: React.FC<AuthComponentProps> = ({ onSuccess }) => {
             <button
               type="button"
               onClick={handleForgotPassword}
-              className="text-sm text-primary hover:underline"
+              className="text-sm text-green-400 hover:text-green-500 hover:underline"
               disabled={loading}
             >
               Forgot Password?
@@ -116,7 +116,7 @@ const Login: React.FC<AuthComponentProps> = ({ onSuccess }) => {
         </CardContent>
         
         <CardFooter>
-          <Button type="submit" className="w-full" disabled={loading}>
+          <Button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white font-bold" disabled={loading}>
             {loading ? 'Logging In...' : 'Sign In'}
           </Button>
         </CardFooter>

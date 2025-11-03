@@ -51,27 +51,27 @@ const UpcomingEventBox: React.FC<UpcomingEventBoxProps> = ({ event }) => {
     const hasStarted = timeLeft.days === 0 && timeLeft.hours === 0 && timeLeft.minutes === 0 && timeLeft.seconds === 0;
 
     return (
-        <div className="bg-white p-6 rounded-xl shadow-sm border h-64 flex flex-col">
-            <h2 className="text-lg font-semibold mb-4 text-gray-900">Upcoming Event (Participated)</h2>
+        <div className="bg-gray-800/90 border border-gray-700 p-6 rounded-xl shadow-sm h-64 flex flex-col">
+            <h2 className="text-lg font-semibold mb-4 text-green-400 border-b border-gray-700 pb-2">Upcoming Event (Participated)</h2>
             
             {event && !hasStarted ? (
                 <div className="flex flex-col items-center justify-center flex-1">
-                    <p className="font-bold text-lg text-gray-700 text-center">{event.name}</p>
-                    <p className="text-sm text-gray-500 mb-4">Starts at: {event.date.toLocaleTimeString()}</p>
+                    <p className="font-bold text-lg text-white text-center">{event.name}</p>
+                    <p className="text-sm text-gray-300 mb-4">Starts at: {event.date.toLocaleTimeString()}</p>
                     
                     {/* Countdown Timer */}
                     <div className="flex space-x-4 text-center">
                         {Object.entries(timeLeft).map(([unit, value]) => (
-                            <div key={unit} className="bg-gray-100 p-3 rounded-lg w-16">
-                                <span className="text-2xl font-mono font-bold text-green-600">{String(value).padStart(2, '0')}</span>
-                                <p className="text-xs text-gray-500 uppercase mt-1">{unit.charAt(0)}</p>
+                            <div key={unit} className="bg-gray-700 p-3 rounded-lg w-16 border border-gray-600">
+                                <span className="text-2xl font-mono font-bold text-green-400">{String(value).padStart(2, '0')}</span>
+                                <p className="text-xs text-gray-400 uppercase mt-1">{unit.charAt(0)}</p>
                             </div>
                         ))}
                     </div>
                 </div>
             ) : (
                 <div className="flex items-center justify-center flex-1">
-                    <p className="text-gray-500">{event ? "The event has started!" : "No upcoming events scheduled."}</p>
+                    <p className="text-gray-300">{event ? "The event has started!" : "No upcoming events scheduled."}</p>
                 </div>
             )}
         </div>

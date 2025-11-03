@@ -65,7 +65,7 @@ const CreateEventButton: React.FC<CreateEventButtonProps> = ({ organization, onC
             <div className="relative inline-block group">
                 <Button
                     onClick={handleclick}
-                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg shadow-md disabled:opacity-50"
+                    className="bg-green-600 hover:bg-green-700 text-white font-bold px-4 py-2 rounded-lg shadow-md disabled:opacity-50"
                 >
                     Create New Event
                 </Button>
@@ -152,20 +152,20 @@ const DashboardPage = () => {
     };
 
     if (loading) {
-        return <div className="min-h-screen flex items-center justify-center">Loading Dashboard...</div>;
+        return <div className="min-h-screen flex items-center justify-center bg-gray-900 text-white">Loading Dashboard...</div>;
     }
     
     if (!profile) return (
-        <div className="min-h-screen flex items-center justify-center">
-            <p className="text-red-500">Error: Profile data could not be loaded. Please log in again.</p>
+        <div className="min-h-screen flex items-center justify-center bg-gray-900">
+            <p className="text-red-400">Error: Profile data could not be loaded. Please log in again.</p>
         </div>
     );
 
 
     return (
-        <div className="p-4 sm:p-6 lg:p-10 bg-gray-50">
+        <div className="p-4 sm:p-6 lg:p-10 bg-gray-900">
             <div className='flex items-center justify-between mb-8'>
-                <h1 className="text-4xl font-extrabold text-gray-900">Event Dashboard</h1>
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold lowercase text-white">Event Dashboard</h1>
                 
                 <CreateEventButton 
                     organization={organization}
@@ -175,21 +175,21 @@ const DashboardPage = () => {
             
             <div className="grid grid-cols-12 gap-6 mb-8">
                 
-                <div className="col-span-12 md:col-span-4 lg:col-span-3 bg-white p-6 rounded-xl shadow-lg border">
-                    <h2 className="text-lg font-semibold mb-4 text-gray-900">User Profile</h2>
+                <div className="col-span-12 md:col-span-4 lg:col-span-3 bg-gray-800/90 border border-gray-700 p-6 rounded-xl shadow-lg">
+                    <h2 className="text-lg font-semibold mb-4 text-green-400 border-b border-gray-700 pb-2">User Profile</h2>
                     <div className="flex items-center space-x-4">
-                        <div className="w-16 h-16 bg-green-200 rounded-full flex items-center justify-center text-xl font-bold text-green-800">
+                        <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center text-xl font-bold text-white">
                             {profile.name[0] || 'U'}
                         </div>
                         <div>
-                            <p className="font-bold text-lg text-gray-900">{profile.name}</p>
-                            <p className="text-sm text-gray-500">{profile.email}</p>
+                            <p className="font-bold text-lg text-white">{profile.name}</p>
+                            <p className="text-sm text-gray-300">{profile.email}</p>
                             <p className="text-xs text-gray-400 mt-1 truncate" title={profile.uuid}>
                                 ID: {profile.uuid.substring(0, 8)}...
                             </p>
                         </div>
                     </div>
-                    <button className="mt-4 text-sm text-green-600 hover:text-green-700 font-medium">
+                    <button className="mt-4 text-sm text-green-400 hover:text-green-500 font-medium">
                         Edit Profile
                     </button>
                 </div>

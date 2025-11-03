@@ -107,7 +107,7 @@ const DynamicEventForm: React.FC<DynamicEventFormProps> = ({ eventId, userId, on
       id: field.field_name,
       name: field.field_name,
       required: field.is_required,
-      className: 'mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 p-2 border',
+      className: 'mt-1 block w-full rounded-md bg-gray-800 border-gray-700 shadow-sm focus:border-green-500 focus:ring-green-500 p-2 border text-white',
       onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => 
         handleChange(field.field_name, e.target.value, field.field_type),
     };
@@ -137,9 +137,9 @@ const DynamicEventForm: React.FC<DynamicEventFormProps> = ({ eventId, userId, on
                   type="checkbox"
                   checked={(value as string[] || []).includes(option)}
                   onChange={() => handleChange(field.field_name, option, 'checkbox')}
-                  className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                  className="h-4 w-4 text-green-600 border-gray-700 rounded focus:ring-green-500"
                 />
-                <label htmlFor={`${field.field_name}-${option}`} className="ml-3 text-sm font-medium text-gray-700">
+                <label htmlFor={`${field.field_name}-${option}`} className="ml-3 text-sm font-medium text-gray-300">
                   {option}
                 </label>
               </div>
@@ -153,32 +153,32 @@ const DynamicEventForm: React.FC<DynamicEventFormProps> = ({ eventId, userId, on
   
   const isFree = ticketPrice === 0;
 
-  if (loading) return <div className="text-center p-8">Loading form...</div>;
-  if (error && !submitting) return <div className="text-center p-8 text-red-600">Error: {error}</div>;
-  if (fields.length === 0) return <div className="text-center p-8 text-gray-600">No registration fields defined for this event.</div>;
+  if (loading) return <div className="text-center p-8 text-gray-300">Loading form...</div>;
+  if (error && !submitting) return <div className="text-center p-8 text-red-400">Error: {error}</div>;
+  if (fields.length === 0) return <div className="text-center p-8 text-gray-300">No registration fields defined for this event.</div>;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <h2 className="text-2xl font-bold text-gray-900">Registration Form</h2>
+      <h2 className="text-2xl font-bold text-green-400 border-b border-gray-700 pb-2">Registration Form</h2>
       
       {/* FIX: Explicitly type 'field' in the map function */}
       {fields.map((field: FormField) => ( 
         <div key={field.id}>
-          <label htmlFor={field.field_name} className="block text-sm font-medium text-gray-700">
-            {field.field_name} {field.is_required && <span className="text-red-500">*</span>}
+          <label htmlFor={field.field_name} className="block text-sm font-medium text-gray-300">
+            {field.field_name} {field.is_required && <span className="text-red-400">*</span>}
           </label>
           {renderField(field)}
         </div>
       ))}
 
       {error && (
-        <p className="text-red-500 text-sm">{error}</p>
+        <p className="text-red-400 text-sm">{error}</p>
       )}
 
       <button
         type="submit"
         disabled={submitting}
-        className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400 transition"
+        className="w-full py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-bold text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:bg-green-400 transition"
       >
         {submitting 
           ? 'Processing...' 

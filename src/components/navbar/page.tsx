@@ -13,9 +13,8 @@ import {
     Dialog,
     DialogTrigger,
     DialogContent,
-    // ADD THESE IMPORTS:
-    DialogTitle, 
-    DialogHeader 
+    DialogTitle,
+    DialogHeader
 } from '@/components/ui/dialog';
 
 // --- Types and Data ---
@@ -32,45 +31,77 @@ const navItems: NavItem[] = [
     { name: 'Join Us', href: 'form/joinus' },
 ]
 
-const profileMenuItems: NavItem[] = [
+// The base profile menu items
+const baseProfileMenuItems: NavItem[] = [
     { name: 'Dashboard', href: '/dashboard' },
     { name: 'Settings', href: '/settings' },
     { name: 'Logout', href: '#' },
 ];
 
+// New item for Admin Dashboard
+const adminDashboardItem: NavItem = { name: 'Admin Dashboard', href: '/admin-dashboard/${userId}' };
+
+
+
 // --- Component ---
 
 const Navbar: React.FC = () => {
     const router = useRouter();
-    const supabase = supabaset; 
+    const supabase = supabaset;            
     
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
     const [isSettingModalOpen, setIsSettingModalOpen] = useState(false);
     const [userId, setUserId] = useState<string | null>(null);
+    const [userRole, setUserRole] = useState<string | null>(null); 
+
+    // Helper function to fetch user profile role (Corrected for role_type)
+    const fetchUserRole = async (id: string) => {
+        const { data, error } = await supabase
+            .from('profiles')
+            .select('role_type') // Querying the correct column
+            .eq('uuid', id)
+            .single();
+
+        if (error) {
+            // This is the line generating the error you see. It needs an RLS fix.
+            console.error('Error fetching user role:', error); 
+            return null;
+        }
+
+        // The returned object will have role_type as the key
+        return data?.role_type || null; 
+    }
 
     // 1. Session Check and Listener
     useEffect(() => {
         const checkSession = async () => {
             const { data: { session } } = await supabase.auth.getSession();
             if (session?.user) {
+                const id = session.user.id;
                 setIsLoggedIn(true);
-                setUserId(session.user.id); 
+                setUserId(id); 
+                const role = await fetchUserRole(id);
+                setUserRole(role);
             } else {
                 setIsLoggedIn(false);
                 setUserId(null);
+                setUserRole(null); 
             }
         };
         checkSession();
 
         const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
             if (session?.user) {
+                const id = session.user.id;
                 setIsLoggedIn(true);
-                setUserId(session.user.id);
+                setUserId(id);
+                fetchUserRole(id).then(setUserRole);
             } else {
                 setIsLoggedIn(false);
                 setUserId(null);
+                setUserRole(null); 
             }
         });
 
@@ -87,6 +118,7 @@ const Navbar: React.FC = () => {
         setIsProfileMenuOpen(false);
         setIsAuthModalOpen(false);
         setUserId(null);
+        setUserRole(null); 
         router.push('/');
     };
 
@@ -97,18 +129,21 @@ const Navbar: React.FC = () => {
             setIsLoggedIn(true);
             setIsAuthModalOpen(false);
             setUserId(user.id); 
+            
+            const role = await fetchUserRole(user.id);
+            setUserRole(role);
+
             router.push(`/dashboard/${user.id}`); 
         }
     };
     
     // 4. Settings Modal Handlers
     const handleSettingsClick = () => {
-        setIsProfileMenuOpen(false); // Close the dropdown menu
-        setIsSettingModalOpen(true); // Open the settings modal
+        setIsProfileMenuOpen(false); 
+        setIsSettingModalOpen(true); 
     }
 
     const handleSettingsUpdateComplete = () => {
-        // Function to call from the ProfileSettingsForm to close the modal
         setIsSettingModalOpen(false);
     };
 
@@ -116,23 +151,30 @@ const Navbar: React.FC = () => {
     // Dashboard Link Generation: If userId exists, use a dynamic path.
     const dashboardHref = userId ? `/dashboard/${userId}` : '/dashboard';
 
+    // 🌟 CONDITIONAL MENU CREATION LOGIC (Role is 'admin')
+    let updatedProfileMenuItems = [...baseProfileMenuItems];
+
+    // Check if the user is an 'admin' and add the Admin Dashboard
+    if (userRole === 'admin') { // <-- Role changed to 'admin'
+        updatedProfileMenuItems.unshift(adminDashboardItem); 
+    }
+
     // Map profile menu items, replacing the generic Dashboard link
-    const updatedProfileMenuItems = profileMenuItems.map(item => {
+    updatedProfileMenuItems = updatedProfileMenuItems.map(item => {
         if(item.name === 'Dashboard') {
             return { ...item, href: dashboardHref };
         }
-        // Settings and Logout are actions, so we use href='#' but rely on conditional rendering
         return item;
     });
 
     return (
-        <nav className="bg-gray-900 shadow-lg sticky top-0 z-50">
+        <nav className="bg-gray-900 shadow-lg sticky top-0 z-50 border-b border-gray-700">
             <div className="mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
 
                     {/* Logo and App Name (omitted for brevity) */}
                     <div className="flex items-center">
-                        <div className="flex-shrink-0 bg-blue-600 rounded-full h-8 w-8 flex items-center justify-center text-white font-bold text-lg mr-2"> O </div>
+                        <div className="flex-shrink-0 bg-green-600 rounded-full h-8 w-8 flex items-center justify-center text-white font-bold text-lg mr-2"> O </div>
                         <span className="text-white text-xl font-semibold tracking-wider"> Optimus </span>
                     </div>
 
@@ -144,7 +186,7 @@ const Navbar: React.FC = () => {
                                <Link 
                                     key={item.name} 
                                     href={item.href} 
-                                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out"
+                                    className="text-gray-300 hover:bg-gray-800 hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out"
                                     >
                                     {item.name}
                                 </Link>
@@ -152,22 +194,31 @@ const Navbar: React.FC = () => {
                         </div>
 
                         {/* Search Button (omitted for brevity) */}
-                        <button className="p-2 border border-gray-600 rounded-lg text-gray-400 hover:text-white transition duration-150 ease-in-out">
+                        <button className="p-2 border border-gray-700 rounded-lg text-gray-400 hover:text-green-400 hover:border-green-600 transition duration-150 ease-in-out">
                             <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                         </button>
 
+                        {userRole === 'admin' && userId && (
+                            <button
+                                onClick={() => router.push(`/admin-dashboard/${userId}`)}
+                                className="ml-2 bg-red-600 hover:bg-red-700 text-white font-semibold py-1.5 px-4 rounded-lg transition duration-150 ease-in-out text-sm"
+                            >
+                                Admin Dashboard
+                            </button>
+                        )}
+
+
                         {/* Authentication (Sign In Button or Profile Menu) */}
                         {!isLoggedIn ? (
                             <Dialog open={isAuthModalOpen} onOpenChange={setIsAuthModalOpen}>
                                 <DialogTrigger asChild>
-                                    <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-1.5 px-4 rounded-lg transition duration-150 ease-in-out text-sm">
+                                    <button className="bg-green-600 hover:bg-green-700 text-white font-bold py-1.5 px-4 rounded-lg transition duration-150 ease-in-out text-sm">
                                         Sign In
                                     </button>
                                 </DialogTrigger>
                                 <DialogContent className="sm:max-w-[425px] p-0 border-none bg-transparent shadow-none">
-                                    {/* 🔑 FIX for Accessibility: Add DialogTitle. We use DialogHeader and a hidden title for clean integration. */}
                                     <DialogHeader className="sr-only">
                                         <DialogTitle>Authentication</DialogTitle>
                                     </DialogHeader>
@@ -196,15 +247,14 @@ const Navbar: React.FC = () => {
                                 {/* Profile Dropdown Menu */}
                                 {isProfileMenuOpen && (
                                     <div
-                                        className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+                                        className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-gray-800 border border-gray-700 ring-1 ring-black ring-opacity-5 focus:outline-none"
                                         role="menu"
                                         tabIndex={-1}
                                     >
                                         {updatedProfileMenuItems.map((item) => {
-                                            const className = "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition duration-100";
+                                            const className = "block px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 hover:text-green-400 transition duration-100";
                                             const isAction = item.name === 'Logout' || item.name === 'Settings';
 
-                                            // 🌟 FIX: Render action items as divs with onClick, and navigation items as modern Link
                                             if (isAction) {
                                                 const handleClick = item.name === 'Logout' ? handleLogout : handleSettingsClick;
                                                 return (
@@ -220,7 +270,6 @@ const Navbar: React.FC = () => {
                                                 );
                                             } 
                                             
-                                            // Render Dashboard link (navigation) using the modern <Link> structure
                                             return (
                                                 <Link 
                                                     key={item.name} 
@@ -228,7 +277,7 @@ const Navbar: React.FC = () => {
                                                     className={className} 
                                                     role="menuitem"
                                                     tabIndex={-1}
-                                                    onClick={() => setIsProfileMenuOpen(false)} // Close menu on navigation
+                                                    onClick={() => setIsProfileMenuOpen(false)} 
                                                 >
                                                     {item.name}
                                                 </Link>
@@ -249,12 +298,10 @@ const Navbar: React.FC = () => {
                     onOpenChange={setIsSettingModalOpen}
                 >
                     <DialogContent className="sm:max-w-md p-0 border-none bg-transparent shadow-none">
-                        {/* 🔑 FIX for Accessibility: Add DialogTitle and DialogHeader. */}
-                        <DialogHeader className="p-4 bg-white dark:bg-gray-800 rounded-t-lg border-b border-gray-200">
-                            <DialogTitle className="text-xl font-bold text-gray-900 dark:text-white">Profile Settings</DialogTitle>
+                        <DialogHeader className="p-4 bg-gray-800 rounded-t-lg border-b border-gray-700">
+                            <DialogTitle className="text-xl font-bold text-green-400">Profile Settings</DialogTitle>
                         </DialogHeader>
                         
-                        {/* Note: ProfileSettingsForm content should be adjusted to not duplicate this title */}
                         <ProfileSettingsForm 
                             userId={userId} 
                             onUpdateComplete={handleSettingsUpdateComplete}

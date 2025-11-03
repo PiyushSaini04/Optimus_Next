@@ -91,10 +91,10 @@ const Signup: React.FC<AuthComponentProps> = ({ onSuccess }) => {
   }
 
   return (
-    <Card className="w-[350px]">
+    <Card className="w-[350px] bg-gray-800/90 border-gray-700">
       <CardHeader>
-        <CardTitle>Sign Up</CardTitle>
-        <CardDescription>Create a new account</CardDescription>
+        <CardTitle className="text-green-400 border-b border-gray-700 pb-2">Sign Up</CardTitle>
+        <CardDescription className="text-gray-300">Create a new account</CardDescription>
       </CardHeader>
       <form onSubmit={handleSignup}>
         <CardContent className="space-y-4">
@@ -144,7 +144,7 @@ const Signup: React.FC<AuthComponentProps> = ({ onSuccess }) => {
           </div>
         </CardContent>
         <CardFooter>
-          <Button type="submit" className="w-full" disabled={loading}>
+          <Button type="submit" className="w-full bg-green-600 hover:bg-green-700 text-white font-bold" disabled={loading}>
             {loading ? 'Signing Up...' : 'Create Account'}
           </Button>
         </CardFooter>

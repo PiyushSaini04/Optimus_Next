@@ -179,22 +179,22 @@ export default function CreateEventPage() {
 
     // --- 3. Tailwind CSS UI ---
     return (
-        <div className="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-4xl w-full space-y-8 p-10 bg-white shadow-xl rounded-lg">
-                <h2 className="text-center text-3xl font-extrabold text-gray-900">
+        <div className="min-h-screen bg-gray-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-4xl w-full space-y-8 p-10 bg-gray-800/90 border border-gray-700 shadow-xl rounded-xl">
+                <h2 className="text-center text-4xl md:text-5xl lg:text-6xl font-extrabold lowercase text-white">
                     Create New Event
                 </h2>
 
                 {/* Status Message */}
                 {message && (
-                    <div className={`p-4 rounded-md ${message.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                    <div className={`p-4 rounded-md ${message.type === 'success' ? 'bg-green-900/50 border border-green-600 text-green-400' : 'bg-red-900/50 border border-red-600 text-red-400'}`}>
                         {message.text}
                     </div>
                 )}
                 
                 {/* Auth Check */}
                 {!user && (
-                    <div className="p-4 bg-yellow-100 text-yellow-800 rounded-md">
+                    <div className="p-4 bg-yellow-900/50 border border-yellow-600 text-yellow-400 rounded-md">
                         Please log in to submit an event (required for `created_by` field and banner upload).
                     </div>
                 )}
@@ -202,15 +202,15 @@ export default function CreateEventPage() {
                 <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                        <h3 className="md:col-span-2 text-xl font-semibold text-indigo-600 border-b pb-2">Event Details (Required)</h3>
+                        <h3 className="md:col-span-2 text-xl font-semibold text-green-400 border-b border-gray-700 pb-2">Event Details (Required)</h3>
 
                         {/* ... (Your existing required fields: Title, Organizer Name, Description, Category, Location, Dates, Status) ... */}
                         
                         {/* Title */}
                         <div>
-                            <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title</label>
+                            <label htmlFor="title" className="block text-sm font-medium text-gray-300">Title</label>
                             <input id="title" name="title" type="text" required value={formData.title} onChange={handleChange}
-                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
+                                className="mt-1 block w-full bg-gray-800 border border-gray-700 rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
                             />
                         </div>
                         
@@ -218,7 +218,7 @@ export default function CreateEventPage() {
                         <div>
                             <label htmlFor="organizer_name" className="block text-sm font-medium text-gray-700">Organizer Name</label>
                             <input id="organizer_name" name="organizer_name" type="text" required value={formData.organizer_name} onChange={handleChange}
-                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
+                                className="mt-1 block w-full bg-gray-800 border border-gray-700 rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
                             />
                         </div>
 
@@ -226,7 +226,7 @@ export default function CreateEventPage() {
                         <div className="md:col-span-2">
                             <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
                             <textarea id="description" name="description" rows={3} required value={formData.description} onChange={handleChange}
-                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
+                                className="mt-1 block w-full bg-gray-800 border border-gray-700 rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
                             ></textarea>
                         </div>
                         
@@ -234,7 +234,7 @@ export default function CreateEventPage() {
                         <div>
                             <label htmlFor="category" className="block text-sm font-medium text-gray-700">Category</label>
                             <input id="category" name="category" type="text" required value={formData.category} onChange={handleChange}
-                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
+                                className="mt-1 block w-full bg-gray-800 border border-gray-700 rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
                             />
                         </div>
 
@@ -242,7 +242,7 @@ export default function CreateEventPage() {
                         <div>
                             <label htmlFor="location" className="block text-sm font-medium text-gray-700">Location</label>
                             <input id="location" name="location" type="text" required value={formData.location} onChange={handleChange}
-                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
+                                className="mt-1 block w-full bg-gray-800 border border-gray-700 rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
                             />
                         </div>
 
@@ -250,7 +250,7 @@ export default function CreateEventPage() {
                         <div>
                             <label htmlFor="start_date" className="block text-sm font-medium text-gray-700">Start Date & Time</label>
                             <input id="start_date" name="start_date" type="datetime-local" required value={formData.start_date} onChange={handleChange}
-                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
+                                className="mt-1 block w-full bg-gray-800 border border-gray-700 rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
                             />
                         </div>
 
@@ -258,7 +258,7 @@ export default function CreateEventPage() {
                         <div>
                             <label htmlFor="end_date" className="block text-sm font-medium text-gray-700">End Date & Time</label>
                             <input id="end_date" name="end_date" type="datetime-local" required value={formData.end_date} onChange={handleChange}
-                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
+                                className="mt-1 block w-full bg-gray-800 border border-gray-700 rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
                             />
                         </div>
                         
@@ -266,7 +266,7 @@ export default function CreateEventPage() {
                         <div>
                             <label htmlFor="status" className="block text-sm font-medium text-gray-700">Status</label>
                             <select id="status" name="status" required value={formData.status} onChange={handleChange}
-                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
+                                className="mt-1 block w-full bg-gray-800 border border-gray-700 rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
                             >
                                 <option value="Draft">Draft</option>
                                 <option value="Published">Published</option>
@@ -276,7 +276,7 @@ export default function CreateEventPage() {
 
 
                         {/* --- Optional Fields Group --- */}
-                        <h3 className="md:col-span-2 text-xl font-semibold text-gray-600 border-b pt-4 pb-2">Optional Details</h3>
+                        <h3 className="md:col-span-2 text-xl font-semibold text-green-400 border-b border-gray-700 pt-4 pb-2">Optional Details</h3>
                         
                         {/* 🌟 New Banner File Input */}
                         <div className="md:col-span-2">
@@ -293,11 +293,11 @@ export default function CreateEventPage() {
                                 file:mr-4 file:py-2 file:px-4
                                 file:rounded-full file:border-0
                                 file:text-sm file:font-semibold
-                                file:bg-violet-50 file:text-indigo-700
-                                hover:file:bg-violet-100"
+                                file:bg-gray-700 file:text-green-400
+                                hover:file:bg-gray-600"
                             />
                             {bannerFile && (
-                                <p className="mt-1 text-xs text-gray-500">Selected: {bannerFile.name}</p>
+                                <p className="mt-1 text-xs text-gray-300">Selected: {bannerFile.name}</p>
                             )}
                         </div>
                         {/* End New Banner File Input 🌟 */}
@@ -306,7 +306,7 @@ export default function CreateEventPage() {
                         <div>
                             <label htmlFor="ticket_price" className="block text-sm font-medium text-gray-700">Ticket Price (Numeric)</label>
                             <input id="ticket_price" name="ticket_price" type="number" step="0.01" value={formData.ticket_price ?? ''} onChange={handleChange}
-                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
+                                className="mt-1 block w-full bg-gray-800 border border-gray-700 rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
                             />
                         </div>
 
@@ -314,7 +314,7 @@ export default function CreateEventPage() {
                         <div>
                             <label htmlFor="max_participants" className="block text-sm font-medium text-gray-700">Max Participants (Integer)</label>
                             <input id="max_participants" name="max_participants" type="number" step="1" value={formData.max_participants ?? ''} onChange={handleChange}
-                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
+                                className="mt-1 block w-full bg-gray-800 border border-gray-700 rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
                             />
                         </div>
 
@@ -322,7 +322,7 @@ export default function CreateEventPage() {
                         <div>
                             <label htmlFor="contact_email" className="block text-sm font-medium text-gray-700">Contact Email</label>
                             <input id="contact_email" name="contact_email" type="email" value={formData.contact_email ?? ''} onChange={handleChange}
-                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
+                                className="mt-1 block w-full bg-gray-800 border border-gray-700 rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
                             />
                         </div>
 
@@ -330,7 +330,7 @@ export default function CreateEventPage() {
                         <div>
                             <label htmlFor="contact_phone" className="block text-sm font-medium text-gray-700">Contact Phone</label>
                             <input id="contact_phone" name="contact_phone" type="tel" value={formData.contact_phone ?? ''} onChange={handleChange}
-                                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-indigo-500 focus:border-indigo-500"
+                                className="mt-1 block w-full bg-gray-800 border border-gray-700 rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
                             />
                         </div>
 
@@ -340,7 +340,7 @@ export default function CreateEventPage() {
                         <button
                             type="submit"
                             disabled={loading || !user}
-                            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+                            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-base font-bold text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 disabled:opacity-50"
                         >
                             {loading ? 'Submitting...' : 'Create Form'}
                         </button>

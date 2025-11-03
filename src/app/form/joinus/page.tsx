@@ -51,7 +51,7 @@ interface InputFieldProps {
 }
 const InputField: React.FC<InputFieldProps> = ({ label, name, type = 'text', required = false, placeholder = '', value, onChange }) => (
   <div className="flex flex-col space-y-1">
-    <label htmlFor={name} className="text-sm font-medium text-gray-700">
+    <label htmlFor={name} className="text-sm font-medium text-gray-300">
       {label} {required && <span className="text-red-500">*</span>}
     </label>
     <input
@@ -64,7 +64,7 @@ const InputField: React.FC<InputFieldProps> = ({ label, name, type = 'text', req
       // Added key for stability, though usually not required for single components
       key={name} 
       onChange={onChange as (e: React.ChangeEvent<HTMLInputElement>) => void}
-      className="px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
+      className="px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white focus:ring-green-500 focus:border-green-500 transition duration-150 ease-in-out"
     />
   </div>
 );
@@ -80,7 +80,7 @@ interface SelectFieldProps {
 }
 const SelectField: React.FC<SelectFieldProps> = ({ label, name, required = false, value, onChange, options }) => (
   <div className="flex flex-col space-y-1">
-    <label htmlFor={name} className="text-sm font-medium text-gray-700">
+    <label htmlFor={name} className="text-sm font-medium text-gray-300">
       {label} {required && <span className="text-red-500">*</span>}
     </label>
     <select
@@ -90,7 +90,7 @@ const SelectField: React.FC<SelectFieldProps> = ({ label, name, required = false
       value={value}
       key={name}
       onChange={onChange}
-      className="px-3 py-2 border border-gray-300 bg-white rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
+      className="px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white focus:ring-green-500 focus:border-green-500 transition duration-150 ease-in-out"
     >
       <option value="" disabled>Select {label.toLowerCase()}</option>
       {options.map((option: string) => (
@@ -183,8 +183,8 @@ export default function Page() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-xl rounded-xl">
-      <h1 className="text-3xl font-bold text-center text-blue-700 mb-8 border-b pb-3">
+    <div className="max-w-4xl mx-auto p-6 bg-gray-800/90 border border-gray-700 shadow-xl rounded-xl">
+      <h1 className="text-4xl md:text-5xl font-extrabold lowercase text-center text-green-400 mb-8 border-b border-gray-700 pb-3">
         Optimus Membership Application 🚀
       </h1>
       
@@ -192,7 +192,7 @@ export default function Page() {
         
         {/* --- Personal Information --- */}
         <section>
-          <h2 className="text-xl font-semibold text-gray-800 mb-4 border-l-4 border-blue-500 pl-3">Personal Information</h2>
+          <h2 className="text-xl font-semibold text-green-400 mb-4 border-l-4 border-green-500 pl-3">Personal Information</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <InputField
               label="Full Name"
@@ -261,9 +261,9 @@ export default function Page() {
                       required
                       checked={formData.gender === g}
                       onChange={handleChange}
-                      className="form-radio text-blue-600 h-4 w-4"
+                      className="form-radio text-green-600 h-4 w-4"
                     />
-                    <span className="ml-2 text-sm text-gray-700">{g}</span>
+                    <span className="ml-2 text-sm text-gray-300">{g}</span>
                   </label>
                 ))}
               </div>
@@ -281,7 +281,7 @@ export default function Page() {
                 value={formData.residence}
                 onChange={handleChange as (e: React.ChangeEvent<HTMLInputElement>) => void}
                 placeholder="Hostel Block / Home Address"
-                className="px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
+                className="px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white focus:ring-green-500 focus:border-green-500 transition duration-150 ease-in-out"
               />
             </div>
           </div>
@@ -291,7 +291,7 @@ export default function Page() {
 
         {/* --- Academic Information --- */}
         <section>
-          <h2 className="text-xl font-semibold text-gray-800 mb-4 border-l-4 border-blue-500 pl-3">Academic Information</h2>
+          <h2 className="text-xl font-semibold text-green-400 mb-4 border-l-4 border-green-500 pl-3">Academic Information</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <SelectField
                 label="Branch/Department"
@@ -316,8 +316,8 @@ export default function Page() {
 
         {/* --- Areas of Interest --- */}
         <section>
-          <h2 className="text-xl font-semibold text-gray-800 mb-4 border-l-4 border-blue-500 pl-3">Areas of Interest <span className="text-red-500">*</span></h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4 bg-gray-50 rounded-lg border">
+          <h2 className="text-xl font-semibold text-green-400 mb-4 border-l-4 border-green-500 pl-3">Areas of Interest <span className="text-red-500">*</span></h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4 bg-gray-800 rounded-lg border border-gray-700">
             {INTERESTS.map((interest) => (
               <label key={interest} className="inline-flex items-center">
                 <input
@@ -325,9 +325,9 @@ export default function Page() {
                   value={interest}
                   checked={formData.areas_of_interest.includes(interest)}
                   onChange={handleInterestChange}
-                  className="form-checkbox text-blue-600 rounded"
+                  className="form-checkbox text-green-600 rounded"
                 />
-                <span className="ml-2 text-sm text-gray-700">{interest}</span>
+                <span className="ml-2 text-sm text-gray-300">{interest}</span>
               </label>
             ))}
           </div>
@@ -381,7 +381,7 @@ export default function Page() {
               value={formData.why_join_optimus}
               onChange={handleChange as (e: React.ChangeEvent<HTMLTextAreaElement>) => void}
               placeholder="Share your motivation and what you hope to contribute..."
-              className="px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out"
+              className="px-3 py-2 bg-gray-800 border border-gray-700 rounded-md text-white focus:ring-green-500 focus:border-green-500 transition duration-150 ease-in-out"
             />
           </div>
         </section>
@@ -390,7 +390,7 @@ export default function Page() {
         {submitMessage && (
             <div 
             className={`p-4 mb-4 rounded-lg text-center ${
-                submitMessage.type === 'success' ? 'bg-green-100 text-green-700 border-green-400' : 'bg-red-100 text-red-700 border-red-400'
+                submitMessage.type === 'success' ? 'bg-green-900/50 text-green-400 border-green-600' : 'bg-red-900/50 text-red-400 border-red-600'
             } border transition duration-300 ease-in-out`}
             >
             {submitMessage.text}
@@ -402,7 +402,7 @@ export default function Page() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full px-4 py-3 text-lg font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full px-4 py-3 text-lg font-bold text-white bg-green-600 rounded-lg hover:bg-green-700 transition duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isSubmitting ? 'Submitting...' : 'Submit Application'}
           </button>

@@ -266,16 +266,16 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-black text-gray-900 dark:text-white overflow-x-hidden">
+    <div className="min-h-screen bg-gray-900 text-white overflow-x-hidden">
 
-      <section className="relative flex flex-col items-center justify-center min-h-screen text-center px-4 sm:px-6 bg-gradient-to-br from-blue-50 via-indigo-100 to-blue-50 dark:from-black dark:via-zinc-900 dark:to-black overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.15),transparent_70%)] dark:bg-[radial-gradient(circle_at_center,rgba(59,130,246,0.1),transparent_70%)]" />
+      <section className="relative flex flex-col items-center justify-center min-h-screen text-center px-4 sm:px-6 bg-gray-900 overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(34,197,94,0.1),transparent_70%)]" />
 
         <div className="absolute inset-0">
           {[...Array(20)].map((_, i) => (
             <div
               key={i}
-              className="absolute w-2 h-2 bg-blue-500 rounded-full opacity-30 dark:opacity-20 animate-float"
+              className="absolute w-2 h-2 bg-green-500 rounded-full opacity-20 animate-float"
               style={{
                 left: `${(i % 5) * 20}%`, // Static positioning for consistent layout
                 top: `${Math.floor(i / 5) * 25}%`, // Static positioning for consistent layout
@@ -287,20 +287,20 @@ export default function Home() {
         </div>
 
         <div className="relative z-10 slide-transition max-w-4xl mx-auto">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 dark:animate-gradient">
-            <span className="animate-gradient-light dark:animate-gradient">
+          <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-extrabold mb-6 lowercase">
+            <span className="text-white">
               {heroSlides[currentSlide].title.split(' ')[0]}
             </span>{' '}
-            <span className="text-blue-600 dark:text-blue-500">
+            <span className="text-green-400">
               {heroSlides[currentSlide].title.split(' ')[1]}
             </span>
           </h1>
 
-          <p className="text-lg sm:text-xl font-medium mb-4 text-blue-700 dark:text-blue-200 animate-fade-in">
+          <p className="text-lg sm:text-xl font-medium mb-4 text-green-400 animate-fade-in">
             {heroSlides[currentSlide].subtitle}
           </p>
 
-          <p className="text-base sm:text-lg max-w-2xl mx-auto mb-8 text-gray-600 dark:text-gray-300 animate-fade-in">
+          <p className="text-base sm:text-lg max-w-2xl mx-auto mb-8 text-gray-300 animate-fade-in">
             {heroSlides[currentSlide].description}
           </p>
 
@@ -310,14 +310,14 @@ export default function Home() {
           <Button
             size="lg"
             onClick={() => router.push('/create-event')}
-            className="bg-blue-500 hover:bg-blue-600 dark:bg-blue-400 dark:hover:bg-blue-500 text-white hover-lift text-lg sm:text-xl font-bold glow-effect-light dark:glow-effect shadow-lg px-6 py-3"
+            className="bg-green-600 hover:bg-green-700 text-white hover-lift text-lg sm:text-xl font-bold shadow-lg px-6 py-3"
           >
             Want to Host?
           </Button>
           <Button
             size="lg"
             onClick={() => router.push('/event-hub')}
-            className="bg-blue-500 hover:bg-blue-600 dark:bg-blue-400 dark:hover:blue-500 hover-lift text-white text-lg sm:text-xl font-bold glow-effect-light dark:glow-effect shadow-lg px-6 py-3"
+            className="bg-green-600 hover:bg-green-700 hover-lift text-white text-lg sm:text-xl font-bold shadow-lg px-6 py-3"
           >
             Want to Attend?
           </Button>
@@ -327,7 +327,7 @@ export default function Home() {
           <Button
             size="lg"
             onClick={() => router.push('/join-us')}
-            className="bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 hover-lift glow-effect-light dark:glow-effect shadow-lg px-6 py-3"
+            className="bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 hover-lift shadow-lg px-6 py-3"
           >
             {heroSlides[currentSlide].cta} <ArrowRight className="ml-2 w-5 h-5" />
           </Button>
@@ -339,7 +339,7 @@ export default function Home() {
             <button
               key={idx}
               onClick={() => setCurrentSlide(idx)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 hover-lift ${idx === currentSlide ? 'bg-blue-600 dark:bg-blue-500 scale-125 glow-effect-light dark:glow-effect' : 'bg-gray-400 dark:bg-gray-600 hover:bg-gray-500'}`}
+              className={`w-3 h-3 rounded-full transition-all duration-300 hover-lift ${idx === currentSlide ? 'bg-green-600 scale-125' : 'bg-gray-600 hover:bg-gray-500'}`}
             />
           ))}
         </div>
@@ -347,8 +347,8 @@ export default function Home() {
 
       {/* VALUE PROPS WITH HOVER EFFECTS */}
       
-      <section className="py-24 px-6 bg-white dark:bg-black">
-        <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent animate-fade-in">
+      <section className="py-24 px-6 bg-gray-900">
+        <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-white animate-fade-in">
           Everything You Need in One Place
         </h2>
         <div className="max-w-7xl mx-auto space-y-12">
@@ -393,7 +393,7 @@ export default function Home() {
               onMouseEnter={() => setHoveredCard(`value-${idx}`)}
               onMouseLeave={() => setHoveredCard(null)}
             >
-              <Card className="bg-gray-50 dark:bg-zinc-900 border border-gray-200 dark:border-zinc-800 rounded-xl w-full md:w-4/5 lg:w-3/4 xl:w-4/5 overflow-hidden shadow-md shadow-gray-300 dark:shadow-gray-500 transition-all duration-300 hover:border-blue-400 dark:hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-400/50 dark:hover:shadow-blue-500/50 hover:scale-105 hover:-translate-y-2 group">
+              <Card className="bg-gray-800/90 border border-gray-700 rounded-xl w-full md:w-4/5 lg:w-3/4 xl:w-4/5 overflow-hidden shadow-md transition-all duration-300 hover:border-green-400 hover:shadow-lg hover:shadow-green-400/20 hover:scale-105 hover:-translate-y-2 group">
                 <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`} />
                 <div className="relative z-10 flex flex-col md:flex-row h-full min-h-[280px]">
                   <div className="w-full md:w-1/3 flex">
@@ -404,13 +404,13 @@ export default function Home() {
                       <div className={`w-14 h-14 mx-auto md:mx-0 mb-4 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center transition-all duration-300 ${hoveredCard === `value-${idx}` ? 'scale-110 animate-float' : ''}`}>
                         <item.icon className="w-7 h-7 text-white" />
                       </div>
-                      <CardTitle className="text-xl md:text-2xl font-bold text-center md:text-left text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-300 transition-colors duration-300">{item.title}</CardTitle>
+                      <CardTitle className="text-xl md:text-2xl font-bold text-center md:text-left text-green-400 border-b border-gray-700 pb-2 transition-colors duration-300">{item.title}</CardTitle>
                     </CardHeader>
                     <CardContent className="text-center md:text-left flex-grow">
-                      <p className="text-gray-600 dark:text-gray-400 text-base md:text-lg group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors duration-300 mb-4">{item.desc}</p>
+                      <p className="text-gray-300 text-base md:text-lg transition-colors duration-300 mb-4">{item.desc}</p>
                       <ul className="space-y-2">
                         {item.features.map((feature, featureIdx) => (
-                          <li key={featureIdx} className="flex items-center text-sm md:text-base text-gray-700 dark:text-gray-300 group-hover:text-gray-900 dark:group-hover:text-white transition-colors duration-300">
+                          <li key={featureIdx} className="flex items-center text-sm md:text-base text-gray-300 transition-colors duration-300">
                             <div className={`w-2 h-2 rounded-full bg-gradient-to-r ${item.color} mr-3 flex-shrink-0`}></div>
                             {feature}
                           </li>
@@ -426,8 +426,8 @@ export default function Home() {
       </section>
 
       {/* FEATURES WITH STAGGER ANIMATION */}
-      <section className="py-20 px-2 bg-gradient-to-b from-gray-100 to-white dark:from-zinc-950 dark:to-black">
-        <h2 className="text-4xl font-bold text-center mb-16 animate-fade-in text-gray-900 dark:text-white">
+      <section className="py-20 px-2 bg-gray-900">
+        <h2 className="text-4xl font-bold text-center mb-16 animate-fade-in text-white">
           Powerful Features
         </h2>
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto">
@@ -446,17 +446,17 @@ export default function Home() {
               onMouseEnter={() => setHoveredCard(`feature-${idx}`)}
               onMouseLeave={() => setHoveredCard(null)}
             >
-              <Card className="bg-white dark:bg-black border border-gray-200 dark:border-zinc-800 rounded-2xl h-full relative overflow-hidden group-hover:border-blue-400 dark:group-hover:border-blue-500/50 transition-all duration-300 group-hover:shadow-xl group-hover:shadow-blue-400/20 dark:group-hover:shadow-blue-500/20">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 dark:from-blue-500/5 dark:to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <Card className="bg-gray-800/90 border border-gray-700 rounded-xl h-full relative overflow-hidden group-hover:border-green-400 transition-all duration-300 group-hover:shadow-xl group-hover:shadow-green-400/20">
+                <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 to-green-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <CardHeader className="relative z-10">
                   <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${item.gradient} p-3 mb-4 transition-all duration-300 ${hoveredCard === `feature-${idx}` ? 'scale-110 animate-float' : ''
                     }`}>
                     <item.icon className="w-6 h-6 text-white" />
                   </div>
-                  <CardTitle className="text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-300 text-2xl font-bold transition-colors duration-300">{item.title}</CardTitle>
+                  <CardTitle className="text-green-400 text-2xl font-bold border-b border-gray-700 pb-2 transition-colors duration-300">{item.title}</CardTitle>
                 </CardHeader>
                 <CardContent className="relative z-10">
-                  <p className="text-gray-600 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors duration-300">{item.desc}</p>
+                  <p className="text-gray-300 transition-colors duration-300">{item.desc}</p>
                 </CardContent>
               </Card>
             </div>
@@ -465,31 +465,31 @@ export default function Home() {
       </section>
 
       {/* ENHANCED TESTIMONIALS CAROUSEL */}
-      <section className="py-20 px-6 bg-gray-100 dark:bg-zinc-950">
-        <h2 className="text-4xl font-bold text-center mb-16 animate-fade-in text-gray-900 dark:text-white">
+      <section className="py-20 px-6 bg-gray-900">
+        <h2 className="text-4xl font-bold text-center mb-16 animate-fade-in text-white">
           What People Say
         </h2>
 
         <div className="max-w-4xl mx-auto relative">
           <div className="text-center slide-transition">
-            <Card className="bg-white dark:bg-black border border-gray-200 dark:border-zinc-800 rounded-2xl p-8 mx-auto max-w-2xl relative overflow-hidden hover-lift">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 dark:from-blue-500/5 dark:to-purple-500/5" />
+            <Card className="bg-gray-800/90 border border-gray-700 rounded-xl p-8 mx-auto max-w-2xl relative overflow-hidden hover-lift">
+              <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 to-green-600/10" />
               <div className="relative z-10">
                 <div className="flex justify-center mb-4">
                   {[...Array(5)].map((_, i) => (
                     <Star key={i} className="w-5 h-5 text-yellow-500 fill-current" />
                   ))}
                 </div>
-                <p className="text-xl text-gray-700 dark:text-gray-300 mb-6 italic">"{testimonials[currentTestimonial].text}"</p>
+                <p className="text-xl text-gray-300 mb-6 italic">"{testimonials[currentTestimonial].text}"</p>
                 <div className="flex items-center justify-center gap-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center animate-float">
+                  <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center animate-float">
                     <span className="text-white font-bold">
                       {testimonials[currentTestimonial].name.charAt(0)}
                     </span>
                   </div>
                   <div className="text-left">
-                    <p className="font-semibold text-gray-900 dark:text-white">{testimonials[currentTestimonial].name}</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-500">{testimonials[currentTestimonial].role}</p>
+                    <p className="font-semibold text-white">{testimonials[currentTestimonial].name}</p>
+                    <p className="text-sm text-gray-400">{testimonials[currentTestimonial].role}</p>
                   </div>
                 </div>
               </div>
@@ -500,9 +500,9 @@ export default function Home() {
           <div className="flex justify-center items-center mt-8 gap-4">
             <button
               onClick={() => setCurrentTestimonial((prev) => prev === 0 ? testimonials.length - 1 : prev - 1)}
-              className="p-2 rounded-full bg-gray-200 dark:bg-zinc-800 hover:bg-gray-300 dark:hover:bg-zinc-700 transition-all duration-200 hover-lift hover:scale-110"
+              className="p-2 rounded-full bg-gray-800 border border-gray-700 hover:bg-gray-700 hover:border-green-600 transition-all duration-200 hover-lift hover:scale-110"
             >
-              <ChevronLeft className="w-5 h-5 text-gray-700 dark:text-white" />
+              <ChevronLeft className="w-5 h-5 text-gray-300" />
             </button>
 
             <div className="flex gap-2">
@@ -510,7 +510,7 @@ export default function Home() {
                 <button
                   key={idx}
                   onClick={() => setCurrentTestimonial(idx)}
-                  className={`h-2 rounded-full transition-all duration-300 hover-lift ${idx === currentTestimonial ? 'bg-blue-600 dark:bg-blue-500 w-6 glow-effect-light dark:glow-effect' : 'bg-gray-400 dark:bg-gray-600 hover:bg-gray-500 w-2'
+                  className={`h-2 rounded-full transition-all duration-300 hover-lift ${idx === currentTestimonial ? 'bg-green-600 w-6' : 'bg-gray-600 hover:bg-gray-500 w-2'
                     }`}
                 />
               ))}
@@ -518,16 +518,16 @@ export default function Home() {
 
             <button
               onClick={() => setCurrentTestimonial((prev) => (prev + 1) % testimonials.length)}
-              className="p-2 rounded-full bg-gray-200 dark:bg-zinc-800 hover:bg-gray-300 dark:hover:bg-zinc-700 transition-all duration-200 hover-lift hover:scale-110"
+              className="p-2 rounded-full bg-gray-800 border border-gray-700 hover:bg-gray-700 hover:border-green-600 transition-all duration-200 hover-lift hover:scale-110"
             >
-              <ChevronRight className="w-5 h-5 text-gray-700 dark:text-white" />
+              <ChevronRight className="w-5 h-5 text-gray-300" />
             </button>
           </div>
         </div>
       </section>
       
       {/* ENHANCED FINAL CTA */}
-      <section className="py-20 px-6 bg-gradient-to-r from-blue-600 via-blue-800 to-blue-600 text-center relative overflow-hidden">
+      <section className="py-20 px-6 bg-gradient-to-r from-green-600 via-green-700 to-green-600 text-center relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.1),transparent_50%)]" />
         <div className="relative z-10 animate-fade-in-up">
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
@@ -537,14 +537,14 @@ export default function Home() {
             </span>
             ?
           </h2>
-          <p className="text-blue-100 text-lg mb-8 max-w-2xl mx-auto">
+          <p className="text-green-100 text-lg mb-8 max-w-2xl mx-auto">
             Join thousands of successful event organizers and attendees worldwide
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               size="lg"
               onClick={() => router.push('/join-us')}
-              className="bg-white text-blue-600 hover:bg-gray-100 dark:bg-black dark:text-white dark:hover:bg-zinc-900 hover-lift glow-effect-light dark:glow-effect shadow-lg font-semibold"
+              className="bg-white text-green-600 hover:bg-gray-100 hover-lift shadow-lg font-bold"
             >
               Get Started Now <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
@@ -554,8 +554,8 @@ export default function Home() {
       </section>
 
       {/* ENHANCED FAQ */}
-      <section className="py-20 px-6 bg-white dark:bg-black max-w-4xl mx-auto">
-        <h2 className="text-4xl font-bold text-center mb-16 animate-fade-in text-gray-900 dark:text-white">
+      <section className="py-20 px-6 bg-gray-900 max-w-4xl mx-auto">
+        <h2 className="text-4xl font-bold text-center mb-16 animate-fade-in text-white">
           Frequently Asked Questions
         </h2>
         <Accordion type="single" collapsible className="space-y-4">
@@ -571,11 +571,11 @@ export default function Home() {
               className="animate-fade-in-up"
               style={{ animationDelay: `${idx * 0.1}s` }}
             >
-              <AccordionItem value={`item-${idx}`} className="border border-gray-200 dark:border-zinc-800 rounded-lg px-6 hover:border-blue-400 dark:hover:border-blue-500/50 transition-all duration-300 hover-lift">
-                <AccordionTrigger className="text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-300 transition-colors duration-300">
+              <AccordionItem value={`item-${idx}`} className="border border-gray-700 rounded-lg px-6 bg-gray-800/90 hover:border-green-400 transition-all duration-300 hover-lift">
+                <AccordionTrigger className="text-white hover:text-green-400 transition-colors duration-300">
                   {item.q}
                 </AccordionTrigger>
-                <AccordionContent className="text-gray-600 dark:text-gray-300">
+                <AccordionContent className="text-gray-300">
                   {item.a}
                 </AccordionContent>
               </AccordionItem>

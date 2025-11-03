@@ -134,51 +134,51 @@ const OrganizationBox: React.FC<OrganizationBoxProps> = ({ onSuccess, currentUse
     return (
         <form 
             onSubmit={handleSubmit} 
-            className="w-150 p-6 bg-grey-100 flex flex-col mx-auto align-middle gap-4 rounded-lg shadow-md" 
+            className="w-150 p-6 bg-gray-800/90 border border-gray-700 flex flex-col mx-auto align-middle gap-4 rounded-xl shadow-md" 
             aria-label="Register organization form"
         >
-            <h2 className="text-2xl font-bold text-gray-900">Register Your Organization</h2>
+            <h2 className="text-2xl font-bold text-green-400 border-b border-gray-700 pb-2">Register Your Organization</h2>
 
             {error && (
-                <div role="alert" className="bg-red-100 text-red-700 p-3 rounded-lg text-sm">
+                <div role="alert" className="bg-red-900/50 border border-red-600 text-red-400 p-3 rounded-lg text-sm">
                     {error}
                 </div>
             )}
 
             {/* Organization Name */}
             <div>
-                <label htmlFor="org-name" className="block text-sm font-medium text-gray-700">Organization Name *</label>
+                <label htmlFor="org-name" className="block text-sm font-medium text-gray-300">Organization Name *</label>
                 <input
                     id="org-name"
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-green-500 focus:border-green-500"
+                    className="mt-1 block w-full bg-gray-800 border border-gray-700 rounded-md shadow-sm p-2 text-white focus:ring-green-500 focus:border-green-500"
                 />
             </div>
 
             {/* Description */}
             <div>
-                <label htmlFor="org-desc" className="block text-sm font-medium text-gray-700">Description</label>
+                <label htmlFor="org-desc" className="block text-sm font-medium text-gray-300">Description</label>
                 <textarea
                     id="org-desc"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     rows={3}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:ring-green-500 focus:border-green-500"
+                    className="mt-1 block w-full bg-gray-800 border border-gray-700 rounded-md shadow-sm p-2 text-white focus:ring-green-500 focus:border-green-500"
                 />
             </div>
 
             {/* Logo Upload */}
             <div>
-                <label htmlFor="org-logo" className="block text-sm font-medium text-gray-700">Organization Logo (Optional)</label>
+                <label htmlFor="org-logo" className="block text-sm font-medium text-gray-300">Organization Logo (Optional)</label>
                 <input
                     id="org-logo"
                     type="file"
                     accept="image/*"
                     onChange={(e) => setLogoFile(e.target.files ? e.target.files[0] : null)}
-                    className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+                    className="mt-1 block w-full text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-700 file:text-green-400 hover:file:bg-gray-600"
                 />
             </div>
 

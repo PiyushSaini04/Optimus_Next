@@ -189,7 +189,7 @@ const EventCard: React.FC<{ event: Event }> = ({ event }) => {
         {/* CTA Button */}
         <button
             onClick={(e) => handleDetailsClick(e, event)} // Function to navigate to details page
-            className={`mt-5 block w-full text-center py-2 rounded-lg font-semibold transition duration-150 bg-blue-600 hover:bg-blue-700 text-white`}
+            className={`mt-5 block w-full text-center py-2 rounded-lg font-bold transition duration-150 bg-green-600 hover:bg-green-700 text-white`}
         >
             View Details
         </button>
@@ -237,7 +237,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFilterChange }) => {
           placeholder="Search events by title, description, organizer, or location..."
           value={filters.searchQuery}
           onChange={handleSearchChange}
-          className="w-full pl-10 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-500"
+          className="w-full pl-10 pr-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 text-white placeholder-gray-500"
         />
       </div>
 
@@ -250,8 +250,8 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFilterChange }) => {
             onClick={() => handlePriceFilterClick(option)}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition duration-150 ${
               filters.priceFilter === option
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                ? 'bg-green-600 text-white'
+                : 'bg-gray-800 text-gray-300 hover:bg-gray-700 border border-gray-700'
             }`}
           >
             {option}
@@ -262,7 +262,7 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFilterChange }) => {
         <div className="relative">
           <button
             onClick={() => setIsSortDropdownOpen(!isSortDropdownOpen)}
-            className="flex items-center px-4 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 text-sm font-medium transition duration-150"
+            className="flex items-center px-4 py-2 bg-gray-800 border border-gray-700 text-gray-300 rounded-lg hover:bg-gray-700 hover:border-green-600 text-sm font-medium transition duration-150"
           >
             <span className="mr-1">{filters.sortOption}</span>
             <ChevronDownIcon className="w-4 h-4 ml-1" />
@@ -274,8 +274,8 @@ const FilterBar: React.FC<FilterBarProps> = ({ filters, onFilterChange }) => {
                 <div
                   key={option}
                   onClick={() => handleSortSelect(option)}
-                  className={`flex items-center px-4 py-2 cursor-pointer text-sm hover:bg-blue-600 hover:text-white transition ${
-                    filters.sortOption === option ? 'bg-blue-500 text-white font-semibold' : 'text-gray-300'
+                  className={`flex items-center px-4 py-2 cursor-pointer text-sm hover:bg-green-600 hover:text-white transition ${
+                    filters.sortOption === option ? 'bg-green-600 text-white font-semibold' : 'text-gray-300'
                   }`}
                 >
                   {filters.sortOption === option && (
@@ -368,10 +368,10 @@ export default function EventsPage() {
     <div className="min-h-screen bg-gray-900 text-white p-4 sm:p-8">
       {/* Header */}
       <header className="mb-10">
-        <h1 className="text-4xl font-bold">Optimus Events Hub</h1>
-        <p className="text-gray-400 mt-2">Discover amazing events and join the community</p>
+        <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white">Optimus Events Hub</h1>
+        <p className="text-gray-300 mt-2">Discover amazing events and join the community</p>
         <Button 
-          className="mt-4 bg-indigo-600 hover:bg-indigo-700 text-white" 
+          className="mt-4 bg-green-600 hover:bg-green-700 text-white font-bold" 
           onClick={handleCreateEventClick}
         >
           Create New Event
@@ -381,7 +381,7 @@ export default function EventsPage() {
       {/* Loading, Error, or Filter Bar */}
       {loading ? (
         <div className="text-center py-10 flex flex-col items-center">
-          <Loader2 className="w-8 h-8 animate-spin text-blue-500 mb-4" />
+          <Loader2 className="w-8 h-8 animate-spin text-green-500 mb-4" />
           <p className="text-gray-400">Loading events...</p>
         </div>
       ) : error ? (
@@ -427,7 +427,7 @@ export default function EventsPage() {
               </p>
               <button
                 onClick={resetAllFilters}
-                className="px-6 py-2 border border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition rounded-lg flex items-center"
+                className="px-6 py-2 border border-gray-700 bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-green-400 transition rounded-lg flex items-center"
               >
                 <XCircleIcon className="w-5 h-5 mr-2" />
                 Reset All Filters

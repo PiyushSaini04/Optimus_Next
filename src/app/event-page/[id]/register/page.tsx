@@ -254,8 +254,8 @@ const RegisterPage = () => {
   // --- Conditional Render Checks ---
   if (loading || isPaymentProcessing || registrationStatus === 'submitting_data') {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-500 mr-2" />
+      <div className="min-h-screen flex items-center justify-center bg-gray-900">
+        <Loader2 className="w-8 h-8 animate-spin text-green-500 mr-2" />
         <p>
             {registrationStatus === 'submitting_data'
               ? 'Finalizing registration with payment data...'
@@ -268,8 +268,8 @@ const RegisterPage = () => {
   if (!eventId || !userId || fetchError || !eventData) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <AlertTriangle className="w-6 h-6 text-red-500 mr-2" />
-        <p className="text-red-500">
+        <AlertTriangle className="w-6 h-6 text-red-400 mr-2" />
+        <p className="text-red-400">
           Error: {fetchError || (!eventId ? 'Event ID missing.' : !userId ? 'Authentication required.' : 'Event data not found.')}
         </p>
       </div>
@@ -282,13 +282,13 @@ const RegisterPage = () => {
   // --- UPDATED Success/Already Registered Message ---
   if (registrationStatus === 'success') {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white p-8 rounded-xl shadow-2xl text-center">
+      <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-900">
+        <div className="max-w-md w-full bg-gray-800/90 border border-gray-700 p-8 rounded-xl shadow-2xl text-center">
           <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">
+          <h2 className="text-2xl font-bold text-white mb-2">
             {fetchError && fetchError.includes('already registered') ? 'Already Registered!' : 'Registration Complete!'}
           </h2>
-          <p className="text-gray-600 mb-4">
+          <p className="text-gray-300 mb-4">
             {fetchError && fetchError.includes('already registered') 
                 ? 'Your registration was previously confirmed.'
                 : `You are now registered for **${eventData.title}**. This QR code is your ticket.`
@@ -296,19 +296,19 @@ const RegisterPage = () => {
           </p>
 
           {ticketUid ? (
-            <div className="mt-4 p-4 border rounded-lg bg-gray-50 flex flex-col items-center">
-              <h3 className="font-bold text-lg mb-2 text-gray-800">Your E-Ticket QR</h3>
+            <div className="mt-4 p-4 border border-gray-700 rounded-lg bg-gray-800 flex flex-col items-center">
+              <h3 className="font-bold text-lg mb-2 text-green-400">Your E-Ticket QR</h3>
               
-              <p className="mt-4 text-sm text-gray-500 break-all">Ticket ID: {ticketUid.substring(0, 8)}...</p>
+              <p className="mt-4 text-sm text-gray-300 break-all">Ticket ID: {ticketUid.substring(0, 8)}...</p>
             </div>
           ) : (
-            <p className="text-red-500 mt-4">Error: Could not retrieve ticket ID.</p>
+            <p className="text-red-400 mt-4">Error: Could not retrieve ticket ID.</p>
           )}
           
 
           <button
             onClick={() => router.push(`/events/${eventId}`)}
-            className="mt-6 py-2 px-4 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-600 transition duration-200 flex items-center justify-center mx-auto"
+            className="mt-6 py-2 px-4 bg-green-600 text-white font-bold rounded-lg shadow-md hover:bg-green-700 transition duration-200 flex items-center justify-center mx-auto"
           >
             View Event Details
           </button>
@@ -319,18 +319,18 @@ const RegisterPage = () => {
 
   if (registrationStatus === 'payment_required') {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-4">
-        <div className="max-w-md w-full bg-white p-8 rounded-xl shadow-2xl text-center">
+      <div className="min-h-screen flex flex-col items-center justify-center p-4 bg-gray-900">
+        <div className="max-w-md w-full bg-gray-800/90 border border-gray-700 p-8 rounded-xl shadow-2xl text-center">
           <DollarSign className="w-16 h-16 text-yellow-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Payment Required</h2>
-          <p className="text-gray-600 mb-4">
+          <h2 className="text-2xl font-bold text-white mb-2">Payment Required</h2>
+          <p className="text-gray-300 mb-4">
             Your registration is **reserved** (Ticket ID: {preRegTicketUid?.substring(0, 8)}...). Click below to complete the payment for: **₹{ticketPrice.toFixed(2)}**.
           </p>
           {razorpayOrderId && (
           <button
             onClick={handleProceedToPayment} 
             disabled={isPaymentProcessing}
-            className="w-full py-3 bg-indigo-600 text-white font-bold rounded-lg shadow-md hover:bg-indigo-700 transition duration-200 flex items-center justify-center disabled:bg-indigo-400"
+            className="w-full py-3 bg-green-600 text-white font-bold rounded-lg shadow-md hover:bg-green-700 transition duration-200 flex items-center justify-center disabled:bg-green-400"
           >
             {isPaymentProcessing ? (
                 <> <Loader2 className="w-5 h-5 animate-spin mr-2" /> Initializing...</>
@@ -339,7 +339,7 @@ const RegisterPage = () => {
               )}
           </button>
           )}
-          {!razorpayOrderId && <p className='text-red-500 mt-4'>Error: Failed to get Razorpay Order ID. Please refresh.</p>}
+          {!razorpayOrderId && <p className='text-red-400 mt-4'>Error: Failed to get Razorpay Order ID. Please refresh.</p>}
         </div>
       </div>
     );
@@ -347,23 +347,23 @@ const RegisterPage = () => {
 
   // --- Main Render (Form Display) ---
   return (
-    <div className="min-h-screen flex flex-col items-center p-4 bg-gray-50 pt-20">
+    <div className="min-h-screen flex flex-col items-center p-4 bg-gray-900 pt-20">
       <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
       
-      <div className="w-full max-w-2xl bg-white p-8 rounded-xl shadow-2xl">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6 border-b pb-3">
+      <div className="w-full max-w-2xl bg-gray-800/90 border border-gray-700 p-8 rounded-xl shadow-2xl">
+        <h1 className="text-3xl md:text-4xl font-bold lowercase text-white mb-6 border-b border-gray-700 pb-3">
           Register for: {eventData.title}
         </h1>
 
         {/* Price Indicator */}
-        <div className={`p-4 mb-6 rounded-lg flex items-center ${isFree ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
+        <div className={`p-4 mb-6 rounded-lg flex items-center ${isFree ? 'bg-green-900/50 border border-green-600 text-green-400' : 'bg-yellow-900/50 border border-yellow-600 text-yellow-400'}`}>
           {isFree ? <CheckCircle className="w-5 h-5 mr-3" /> : <DollarSign className="w-5 h-5 mr-3" />}
           <p className="font-semibold">
             {isFree ? 'This is a **FREE** event.' : `Ticket Price: **₹${ticketPrice.toFixed(2)}**`}
           </p>
         </div>
 
-        <p className="text-gray-600 mb-6">{eventData.description}</p>
+        <p className="text-gray-300 mb-6">{eventData.description}</p>
 
         {/* Dynamic Registration Form with Submission Handler */}
         <DynamicEventForm 

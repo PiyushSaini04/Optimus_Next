@@ -160,35 +160,35 @@ const ProfileSettingsForm: React.FC<ProfileSettingsFormProps> = ({ userId, onUpd
     
     // --- Render Logic ---
     if (isLoading) {
-        return <div className="p-6 text-center text-gray-500">Loading profile...</div>;
+        return <div className="p-6 text-center text-gray-300">Loading profile...</div>;
     }
     
     return (
-        <div className="p-6 bg-white dark:bg-gray-800 rounded-lg max-h-[80vh] overflow-y-auto">
-            <h2 className="text-2xl font-bold mb-4 text-gray-900 dark:text-white">Profile Settings</h2>
+        <div className="p-6 bg-gray-800/90 border border-gray-700 rounded-xl max-h-[80vh] overflow-y-auto">
+            <h2 className="text-2xl font-bold mb-4 text-green-400 border-b border-gray-700 pb-2">Profile Settings</h2>
             
             {/* Display Messages */}
-            {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">{error}</div>}
-            {success && <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">{success}</div>}
+            {error && <div className="bg-red-900/50 border border-red-600 text-red-400 px-4 py-3 rounded relative mb-4" role="alert">{error}</div>}
+            {success && <div className="bg-green-900/50 border border-green-600 text-green-400 px-4 py-3 rounded relative mb-4" role="alert">{success}</div>}
 
             <form onSubmit={handleSubmit} className="space-y-6">
                 
                 {/* Email Field (Non-Editable) */}
                 <div>
-                    <Label htmlFor="email" className="text-gray-700 dark:text-gray-300">Email Address (Not Editable)</Label>
+                    <Label htmlFor="email" className="text-gray-300">Email Address (Not Editable)</Label>
                     <Input 
                         id="email" 
                         type="email" 
                         value={email}
                         readOnly // Makes the field non-editable
                         disabled // Visually indicates it's non-editable
-                        className="mt-1 bg-gray-100 dark:bg-gray-700"
+                        className="mt-1 bg-gray-800 border-gray-700"
                     />
                 </div>
 
                 {/* Name Field */}
                 <div>
-                    <Label htmlFor="name" className="text-gray-700 dark:text-gray-300">Full Name</Label>
+                    <Label htmlFor="name" className="text-gray-300">Full Name</Label>
                     <Input 
                         id="name" 
                         type="text" 
@@ -200,14 +200,14 @@ const ProfileSettingsForm: React.FC<ProfileSettingsFormProps> = ({ userId, onUpd
                 
                 {/* Avatar Upload Field */}
                 <div>
-                    <Label className="text-gray-700 dark:text-gray-300 block mb-2">Profile Picture</Label>
+                    <Label className="text-gray-300 block mb-2">Profile Picture</Label>
                     
                     {profileData.avatar_url && (
                         <div className="mb-4">
                             <Image
                                 src={profileData.avatar_url}
                                 alt="Current Avatar"
-                                className="rounded-full object-cover border-2 border-blue-500"
+                                className="rounded-full object-cover border-2 border-green-500"
                                 width={96}
                                 height={96}
                             />
@@ -220,10 +220,10 @@ const ProfileSettingsForm: React.FC<ProfileSettingsFormProps> = ({ userId, onUpd
                         accept="image/*"
                         onChange={handleAvatarUpload}
                         disabled={isUploading || isSubmitting}
-                        className="mt-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
+                        className="mt-1 block w-full text-sm text-gray-300 border border-gray-700 rounded-lg cursor-pointer bg-gray-800"
                     />
-                    {isUploading && <p className="text-sm text-blue-500 mt-1">Uploading...</p>}
-                    <p className="text-xs text-gray-500 mt-1">
+                    {isUploading && <p className="text-sm text-green-400 mt-1">Uploading...</p>}
+                    <p className="text-xs text-gray-400 mt-1">
                         Upload a new file. This will automatically update your profile.
                     </p>
                 </div>
@@ -232,7 +232,7 @@ const ProfileSettingsForm: React.FC<ProfileSettingsFormProps> = ({ userId, onUpd
                 <Button 
                     type="submit" 
                     disabled={isSubmitting || isUploading}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 transition duration-150"
+                    className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 transition duration-150"
                 >
                     {isSubmitting ? 'Saving Name...' : 'Update Name'}
                 </Button>
