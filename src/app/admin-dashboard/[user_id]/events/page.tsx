@@ -19,12 +19,10 @@ import { Plus } from 'lucide-react';
 const EVENT_FIELDS: FormField[] = [
     { name: 'title', label: 'Event Title', type: 'text', required: true },
     { name: 'description', label: 'Description', type: 'textarea', required: true },
-    { name: 'category', label: 'Category', type: 'select', options: ['Conference', 'Workshop', 'Meetup', 'Other'], required: true },
     { name: 'location', label: 'Location', type: 'text', required: true },
-    { name: 'start_date', label: 'Start Date', type: 'datetime-local', required: true },
-    { name: 'end_date', label: 'End Date', type: 'datetime-local', required: true },
-    { name: 'status', label: 'Status', type: 'select', options: ['Draft', 'Published', 'Cancelled'], required: true },
+    { name: 'status', label: 'Status', type: 'select', options: ['pending', 'approved', 'rejected'], required: true },
     { name: 'ticket_price', label: 'Ticket Price', type: 'number', required: false },
+    { name: 'max_participants', label: 'Max Participants', type: 'number', required: false },
     // ... add all other fields as required by your Event type
 ];
 

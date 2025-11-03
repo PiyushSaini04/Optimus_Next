@@ -5,7 +5,7 @@ import Link from 'next/link';
 const OrganizationBox = () => {
   // Use the new, non-legacy Link component
   return (
-    <div className="p-6 bg-gray-800/90 border border-gray-700 rounded-xl shadow-md">
+    <div className="p-6 bg-gray-800/90 border border-gray-700 rounded-xl shadow-md w-full">
       <h2 className="text-xl font-semibold mb-4 text-green-400 border-b border-gray-700 pb-2">Organization Management</h2>
       <p className="mb-6 text-gray-300">
         Register your organization to host and manage events seamlessly.

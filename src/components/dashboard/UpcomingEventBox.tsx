@@ -51,7 +51,7 @@ const UpcomingEventBox: React.FC<UpcomingEventBoxProps> = ({ event }) => {
     const hasStarted = timeLeft.days === 0 && timeLeft.hours === 0 && timeLeft.minutes === 0 && timeLeft.seconds === 0;
 
     return (
-        <div className="bg-gray-800/90 border border-gray-700 p-6 rounded-xl shadow-sm h-64 flex flex-col">
+        <div className="bg-gray-800/90 border border-gray-700 p-6 rounded-xl shadow-sm h-64 flex flex-col h-full">
             <h2 className="text-lg font-semibold mb-4 text-green-400 border-b border-gray-700 pb-2">Upcoming Event (Participated)</h2>
             
             {event && !hasStarted ? (

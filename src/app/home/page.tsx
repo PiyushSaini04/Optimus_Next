@@ -272,22 +272,22 @@ export default function Home() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(34,197,94,0.1),transparent_70%)]" />
 
         <div className="absolute inset-0">
-          {[...Array(20)].map((_, i) => (
+          {[...Array(40)].map((_, i) => (
             <div
               key={i}
               className="absolute w-2 h-2 bg-green-500 rounded-full opacity-20 animate-float"
               style={{
-                left: `${(i % 5) * 20}%`, // Static positioning for consistent layout
-                top: `${Math.floor(i / 5) * 25}%`, // Static positioning for consistent layout
-                animationDelay: `${i * 0.1}s`, // Staggered animation for variety
-                animationDuration: `${2 + i * 0.1}s` // Varied duration for natural effect
+                left: `${(i % 8) * 12.5}%`, // Static positioning for consistent layout
+                top: `${Math.floor(i / 8) * 20}%`, // Static positioning for consistent layout
+                animationDelay: `${i * 0.3}s`, // Staggered animation for variety
+                animationDuration: `${2 + i * 0.5}s` // Varied duration for natural effect
               }}
             />
           ))}
         </div>
 
         <div className="relative z-10 slide-transition max-w-4xl mx-auto">
-          <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-extrabold mb-6 lowercase">
+          <h1 className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-extrabold mb-6 ">
             <span className="text-white">
               {heroSlides[currentSlide].title.split(' ')[0]}
             </span>{' '}

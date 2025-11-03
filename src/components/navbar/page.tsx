@@ -16,6 +16,7 @@ import {
     DialogTitle,
     DialogHeader
 } from '@/components/ui/dialog';
+import { set } from 'date-fns';
 
 // --- Types and Data ---
 
@@ -55,23 +56,34 @@ const Navbar: React.FC = () => {
     const [isSettingModalOpen, setIsSettingModalOpen] = useState(false);
     const [userId, setUserId] = useState<string | null>(null);
     const [userRole, setUserRole] = useState<string | null>(null); 
+    // components/Navbar.tsx (Inside Navbar component)
+    const [avatarUrl, setAvatarUrl] = useState<string>('https://via.placeholder.com/150/007bff/ffffff?text=U');
 
     // Helper function to fetch user profile role (Corrected for role_type)
-    const fetchUserRole = async (id: string) => {
+    const fetchUserProfile = async (id: string) => { // Renamed from fetchUserRole for clarity
         const { data, error } = await supabase
             .from('profiles')
-            .select('role_type') // Querying the correct column
+            // FIX: Combine both fields into a single .select() string
+            .select('role_type, avatar_url') 
+            // NOTE: I'm using 'avatar_url' (snake_case) as is common in Supabase, 
+            // please verify if your column is actually named 'avtar_url' or 'avatar_url'.
             .eq('uuid', id)
             .single();
 
         if (error) {
-            // This is the line generating the error you see. It needs an RLS fix.
-            console.error('Error fetching user role:', error); 
-            return null;
+            console.error('Error fetching user profile:', error); 
+            // Return a structured object with nulls/defaults on error
+            return { 
+                role: null, 
+                avatar: 'https://via.placeholder.com/150/007bff/ffffff?text=U' 
+            };
         }
 
-        // The returned object will have role_type as the key
-        return data?.role_type || null; 
+        // FIX: Return an object containing both values
+        return { 
+            role: data?.role_type || null, 
+            avatar: data?.avatar_url || 'https://via.placeholder.com/150/007bff/ffffff?text=U' 
+        }; 
     }
 
     // 1. Session Check and Listener
@@ -82,8 +94,9 @@ const Navbar: React.FC = () => {
                 const id = session.user.id;
                 setIsLoggedIn(true);
                 setUserId(id); 
-                const role = await fetchUserRole(id);
-                setUserRole(role);
+                const role = await fetchUserProfile(id);
+                setUserRole(role.role);
+                setAvatarUrl(role.avatar); // Set avatar URL from profile data
             } else {
                 setIsLoggedIn(false);
                 setUserId(null);
@@ -97,7 +110,10 @@ const Navbar: React.FC = () => {
                 const id = session.user.id;
                 setIsLoggedIn(true);
                 setUserId(id);
-                fetchUserRole(id).then(setUserRole);
+                fetchUserProfile(id).then(role => {
+                    setUserRole(role.role);
+                    setAvatarUrl(role.avatar); // Set avatar URL from profile data
+                });
             } else {
                 setIsLoggedIn(false);
                 setUserId(null);
@@ -130,8 +146,9 @@ const Navbar: React.FC = () => {
             setIsAuthModalOpen(false);
             setUserId(user.id); 
             
-            const role = await fetchUserRole(user.id);
-            setUserRole(role);
+            const role = await fetchUserProfile(user.id);
+            setUserRole(role.role);
+            setAvatarUrl(role.avatar); // Set avatar URL from profile data
 
             router.push(`/dashboard/${user.id}`); 
         }
@@ -178,7 +195,7 @@ const Navbar: React.FC = () => {
                         <span className="text-white text-xl font-semibold tracking-wider"> Optimus </span>
                     </div>
 
-                    <div className="flex items-center space-x-4">
+                    <div className="flex-1 flex justify-center">
 
                         {/* Desktop Navigation Links - Modern Link Usage (No <a> tag needed) */}
                         <div className="hidden md:flex space-x-4">
@@ -192,22 +209,20 @@ const Navbar: React.FC = () => {
                                 </Link>
                             ))}
                         </div>
+                        </div>
+                    <div className="flex items-center space-x-4">
 
                         {/* Search Button (omitted for brevity) */}
-                        <button className="p-2 border border-gray-700 rounded-lg text-gray-400 hover:text-green-400 hover:border-green-600 transition duration-150 ease-in-out">
-                            <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                        </button>
+                        
 
-                        {userRole === 'admin' && userId && (
+                        {/* {userRole === 'admin' && userId && (
                             <button
                                 onClick={() => router.push(`/admin-dashboard/${userId}`)}
                                 className="ml-2 bg-red-600 hover:bg-red-700 text-white font-semibold py-1.5 px-4 rounded-lg transition duration-150 ease-in-out text-sm"
                             >
                                 Admin Dashboard
                             </button>
-                        )}
+                        )} */}
 
 
                         {/* Authentication (Sign In Button or Profile Menu) */}
@@ -238,7 +253,7 @@ const Navbar: React.FC = () => {
                                     aria-haspopup="true"
                                 >
                                     <span className="sr-only">Open user menu</span>
-                                    <img className="h-8 w-8 rounded-full bg-gray-600 border-2 border-white" src="https://via.placeholder.com/150/007bff/ffffff?text=U" alt="User Profile" />
+                                    <img className="h-8 w-8 rounded-full bg-gray-600 border-2 border-white" src={avatarUrl} alt="User Profile" />
                                     <svg className={`ml-1 h-4 w-4 text-white transform ${isProfileMenuOpen ? 'rotate-180' : 'rotate-0'} transition-transform duration-200`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                                     </svg>

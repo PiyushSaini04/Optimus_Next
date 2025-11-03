@@ -1,4 +1,3 @@
-// components/CreateEventPage.tsx (or pages/create-event.tsx)
 "use client";
 
 import React, { useState, FormEvent, useEffect } from 'react';
@@ -18,9 +17,9 @@ interface EventFormData {
     status: string;
     ticket_price: number | null;
     max_participants: number | null;
-    banner_url: string | null;
-    contact_email: string | null;
-    contact_phone: string | null;
+    banner_url: string ;
+    contact_email: string ;
+    contact_phone: string ;
 }
 
 const initialFormData: EventFormData = {
@@ -31,12 +30,12 @@ const initialFormData: EventFormData = {
     organizer_name: '',
     start_date: '',
     end_date: '',
-    status: 'Draft',
+    status: 'Pending',
     ticket_price: null,
     max_participants: null,
-    banner_url: null, // This will be set by the file upload result
-    contact_email: null,
-    contact_phone: null,
+    banner_url: '', // This will be set by the file upload result
+    contact_email: '',
+    contact_phone: '',
 };
 
 // **Define the Storage Bucket Name**
@@ -109,8 +108,6 @@ export default function CreateEventPage() {
     };
     
     /** Submits the form data to the Supabase 'events' table. */
-    // Assuming 'router' is available via useRouter() in the component scope
-// Assuming 'router' is available via useRouter() in the component scope
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setLoading(true);
@@ -150,12 +147,11 @@ export default function CreateEventPage() {
         }
 
         // --- STEP 3: INSERT EVENT DATA & CAPTURE THE NEW ID ---
-        // Added .select('id') to return the newly created record's ID
         const { data: newEvent, error } = await supabase
             .from('events')
             .insert([dataToInsert])
-            .select('id') // Key modification: Selects the ID of the new row
-            .single(); // Expects one row back
+            .select('id') 
+            .single(); 
 
         setLoading(false);
 
@@ -181,7 +177,7 @@ export default function CreateEventPage() {
     return (
         <div className="min-h-screen bg-gray-900 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
             <div className="max-w-4xl w-full space-y-8 p-10 bg-gray-800/90 border border-gray-700 shadow-xl rounded-xl">
-                <h2 className="text-center text-4xl md:text-5xl lg:text-6xl font-extrabold lowercase text-white">
+                <h2 className="text-center text-4xl md:text-5xl lg:text-6xl font-extrabold text-white">
                     Create New Event
                 </h2>
 
@@ -204,83 +200,91 @@ export default function CreateEventPage() {
 
                         <h3 className="md:col-span-2 text-xl font-semibold text-green-400 border-b border-gray-700 pb-2">Event Details (Required)</h3>
 
-                        {/* ... (Your existing required fields: Title, Organizer Name, Description, Category, Location, Dates, Status) ... */}
-                        
                         {/* Title */}
                         <div>
-                            <label htmlFor="title" className="block text-sm font-medium text-gray-300">Title</label>
+                            {/* Label text changed to white */}
+                            <label htmlFor="title" className="block text-sm font-medium text-white">Title</label>
                             <input id="title" name="title" type="text" required value={formData.title} onChange={handleChange}
-                                className="mt-1 block w-full bg-gray-800 border border-gray-700 rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
+                                className="mt-1 block w-full bg-gray-800 border border-white rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
                             />
                         </div>
                         
                         {/* Organizer Name */}
                         <div>
-                            <label htmlFor="organizer_name" className="block text-sm font-medium text-gray-700">Organizer Name</label>
+                            {/* Label text changed to white */}
+                            <label htmlFor="organizer_name" className="block text-sm font-medium text-white">Organizer Name</label>
                             <input id="organizer_name" name="organizer_name" type="text" required value={formData.organizer_name} onChange={handleChange}
-                                className="mt-1 block w-full bg-gray-800 border border-gray-700 rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
+                                className="mt-1 block w-full bg-gray-800 border border-white rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
                             />
                         </div>
 
                         {/* Description (Full Width) */}
                         <div className="md:col-span-2">
-                            <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
+                            {/* Label text changed to white */}
+                            <label htmlFor="description" className="block text-sm font-medium text-white">Description</label>
                             <textarea id="description" name="description" rows={3} required value={formData.description} onChange={handleChange}
-                                className="mt-1 block w-full bg-gray-800 border border-gray-700 rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
+                                className="mt-1 block w-full bg-gray-800 border border-white rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
                             ></textarea>
                         </div>
                         
                         {/* Category */}
                         <div>
-                            <label htmlFor="category" className="block text-sm font-medium text-gray-700">Category</label>
-                            <input id="category" name="category" type="text" required value={formData.category} onChange={handleChange}
-                                className="mt-1 block w-full bg-gray-800 border border-gray-700 rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
-                            />
+                            <label htmlFor="category" className="block text-sm font-medium text-white">Category</label>
+                            <select
+                                id="category"
+                                name="category"
+                                required
+                                value={formData.category}
+                                onChange={handleChange}
+                                className="mt-1 block w-full bg-gray-800 border border-white rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
+                            >
+                                <option value="" disabled>Select Category</option>
+                                <option value="Workshop">Workshop</option>
+                                <option value="Seminar">Seminar</option>
+                                <option value="Hackathon">Hackathon</option>
+                                <option value="Tech Talk">Tech Talk</option>
+                                <option value="Competition">Competition</option>
+                                <option value="Bootcamp">Bootcamp</option>
+                                <option value="Conference">Conference</option>
+                                <option value="Networking">Networking</option>
+                                <option value="Cultural">Cultural</option>
+                            </select>
                         </div>
 
                         {/* Location */}
                         <div>
-                            <label htmlFor="location" className="block text-sm font-medium text-gray-700">Location</label>
+                            {/* Label text changed to white */}
+                            <label htmlFor="location" className="block text-sm font-medium text-white">Location</label>
                             <input id="location" name="location" type="text" required value={formData.location} onChange={handleChange}
-                                className="mt-1 block w-full bg-gray-800 border border-gray-700 rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
+                                className="mt-1 block w-full bg-gray-800 border border-white rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
                             />
                         </div>
 
                         {/* Start Date & Time */}
                         <div>
-                            <label htmlFor="start_date" className="block text-sm font-medium text-gray-700">Start Date & Time</label>
+                            {/* Label text changed to white */}
+                            <label htmlFor="start_date" className="block text-sm font-medium text-white">Start Date & Time</label>
                             <input id="start_date" name="start_date" type="datetime-local" required value={formData.start_date} onChange={handleChange}
-                                className="mt-1 block w-full bg-gray-800 border border-gray-700 rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
+                                className="mt-1 block w-full bg-gray-800 border border-white rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
                             />
                         </div>
 
                         {/* End Date & Time */}
                         <div>
-                            <label htmlFor="end_date" className="block text-sm font-medium text-gray-700">End Date & Time</label>
+                            {/* Label text changed to white */}
+                            <label htmlFor="end_date" className="block text-sm font-medium text-white">End Date & Time</label>
                             <input id="end_date" name="end_date" type="datetime-local" required value={formData.end_date} onChange={handleChange}
-                                className="mt-1 block w-full bg-gray-800 border border-gray-700 rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
+                                className="mt-1 block w-full bg-gray-800 border border-white rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
                             />
                         </div>
                         
-                        {/* Status */}
-                        <div>
-                            <label htmlFor="status" className="block text-sm font-medium text-gray-700">Status</label>
-                            <select id="status" name="status" required value={formData.status} onChange={handleChange}
-                                className="mt-1 block w-full bg-gray-800 border border-gray-700 rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
-                            >
-                                <option value="Draft">Draft</option>
-                                <option value="Published">Published</option>
-                                <option value="Cancelled">Cancelled</option>
-                            </select>
-                        </div>
-
-
-                        {/* --- Optional Fields Group --- */}
-                        <h3 className="md:col-span-2 text-xl font-semibold text-green-400 border-b border-gray-700 pt-4 pb-2">Optional Details</h3>
                         
-                        {/* 🌟 New Banner File Input */}
+                       
+                        
+                        {/* 🌟 Banner File Input (Hydration Error Fix) 🌟 */}
                         <div className="md:col-span-2">
-                            <label htmlFor="banner_file" className="block text-sm font-medium text-gray-700">
+                            {/* Label text changed to white */}
+                            <label htmlFor="banner_file" className="block text-sm font-medium text-white">
                                 Event Banner Image (Max 5MB recommended)
                             </label>
                             <input 
@@ -288,49 +292,49 @@ export default function CreateEventPage() {
                                 name="banner_file" 
                                 type="file" 
                                 accept="image/*"
+                                required
                                 onChange={handleFileChange}
-                                className="mt-1 block w-full text-sm text-gray-500
-                                file:mr-4 file:py-2 file:px-4
-                                file:rounded-full file:border-0
-                                file:text-sm file:font-semibold
-                                file:bg-gray-700 file:text-green-400
-                                hover:file:bg-gray-600"
+                                className="mt-1 block w-full text-sm text-white file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-gray-700 file:text-green-400 hover:file:bg-gray-600"
                             />
                             {bannerFile && (
                                 <p className="mt-1 text-xs text-gray-300">Selected: {bannerFile.name}</p>
                             )}
                         </div>
-                        {/* End New Banner File Input 🌟 */}
+                        {/* End Banner File Input 🌟 */}
 
                         {/* Ticket Price */}
                         <div>
-                            <label htmlFor="ticket_price" className="block text-sm font-medium text-gray-700">Ticket Price (Numeric)</label>
-                            <input id="ticket_price" name="ticket_price" type="number" step="0.01" value={formData.ticket_price ?? ''} onChange={handleChange}
-                                className="mt-1 block w-full bg-gray-800 border border-gray-700 rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
+                            {/* Label text changed to white */}
+                            <label htmlFor="ticket_price" className="block text-sm font-medium text-white">Ticket Price (Numeric)</label>
+                            <input id="ticket_price" name="ticket_price" type="number" required step="0.01" value={formData.ticket_price ?? ''} onChange={handleChange}
+                                className="mt-1 block w-full bg-gray-800 border border-white rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
                             />
                         </div>
 
                         {/* Max Participants */}
                         <div>
-                            <label htmlFor="max_participants" className="block text-sm font-medium text-gray-700">Max Participants (Integer)</label>
-                            <input id="max_participants" name="max_participants" type="number" step="1" value={formData.max_participants ?? ''} onChange={handleChange}
-                                className="mt-1 block w-full bg-gray-800 border border-gray-700 rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
+                            {/* Label text changed to white */}
+                            <label htmlFor="max_participants" className="block text-sm font-medium text-white">Max Participants (Integer)</label>
+                            <input id="max_participants" name="max_participants" type="number" required step="1" value={formData.max_participants ?? ''} onChange={handleChange}
+                                className="mt-1 block w-full bg-gray-800 border border-white rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
                             />
                         </div>
 
                         {/* Contact Email */}
                         <div>
-                            <label htmlFor="contact_email" className="block text-sm font-medium text-gray-700">Contact Email</label>
-                            <input id="contact_email" name="contact_email" type="email" value={formData.contact_email ?? ''} onChange={handleChange}
-                                className="mt-1 block w-full bg-gray-800 border border-gray-700 rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
+                            {/* Label text changed to white */}
+                            <label htmlFor="contact_email" className="block text-sm font-medium text-white">Contact Email</label>
+                            <input id="contact_email" name="contact_email" type="email" required value={formData.contact_email ?? ''} onChange={handleChange}
+                                className="mt-1 block w-full bg-gray-800 border border-white rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
                             />
                         </div>
 
                         {/* Contact Phone */}
                         <div>
-                            <label htmlFor="contact_phone" className="block text-sm font-medium text-gray-700">Contact Phone</label>
-                            <input id="contact_phone" name="contact_phone" type="tel" value={formData.contact_phone ?? ''} onChange={handleChange}
-                                className="mt-1 block w-full bg-gray-800 border border-gray-700 rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
+                            {/* Label text changed to white */}
+                            <label htmlFor="contact_phone" className="block text-sm font-medium text-white">Contact Phone</label>
+                            <input id="contact_phone" name="contact_phone" type="tel" required value={formData.contact_phone ?? ''} onChange={handleChange}
+                                className="mt-1 block w-full bg-gray-800 border border-white rounded-md shadow-sm py-2 px-3 text-white focus:ring-green-500 focus:border-green-500"
                             />
                         </div>
 

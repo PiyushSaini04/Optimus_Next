@@ -4,7 +4,6 @@ import React from "react";
 import { useAuth } from "@/components/context/authprovider";
 import { useRouter } from "next/navigation";
 import HomePage from "./home/page"; 
-import Navbar from "@/components/navbar/page";
 
 export default function Home() {
   
@@ -20,12 +19,8 @@ export default function Home() {
     }
 
     return (
-        <>
-            {/* <Navbar/> */}
-            
-            <HomePage />
-            
-            
+        <>    
+            <HomePage />  
         </>
     );
 }
