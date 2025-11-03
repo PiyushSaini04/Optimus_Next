@@ -1,5 +1,6 @@
 // components/Dashboard/HostedEventsList.tsx
 import React from 'react';
+import { EyeIcon, PencilIcon } from '@heroicons/react/24/outline'; // Importing icons
 
 interface Event {
     id: string;
@@ -10,21 +11,15 @@ interface Event {
 interface EventListProps {
     events: Event[];
     title: string;
+    // Handlers passed from the parent (DashboardPage) to manage state/modals
+    onEditEvent: (eventId: string) => void;
+    onViewRegistrations: (eventId: string) => void;
 }
 
-const HostedEventsList: React.FC<EventListProps> = ({ events, title }) => {
+const HostedEventsList: React.FC<EventListProps> = ({ events, title, onEditEvent, onViewRegistrations }) => {
     
-    // Function to handle the click on the Manage button
-    const handleManageClick = (eventId: string) => {
-        // In a real application, you'd use Next.js useRouter here:
-        // router.push(`/dashboard/events/${eventId}/manage`);
-        
-        console.log(`Navigating to management page for Event ID: ${eventId}`);
-        alert(`Navigating to management page for Event ID: ${eventId}`);
-    };
-
     return (
-        <div className="bg-gray-800/90 border border-gray-700 p-6 rounded-xl shadow-sm">
+        <div className="bg-gray-800/90 border border-gray-700 p-6 rounded-xl shadow-sm h-full overflow-y-scroll scrollbar-thin scrollbar-thumb-green-600 scrollbar-track-gray-900 scrollbar-thumb-rounded-10">            
             <h2 className="text-lg font-semibold text-green-400 border-b border-gray-700 pb-2 mb-4">{title}</h2>
 
             <div className="space-y-4 max-h-96 overflow-y-auto pr-2">
@@ -45,14 +40,28 @@ const HostedEventsList: React.FC<EventListProps> = ({ events, title }) => {
                                 </div>
                             </div>
 
-                            {/* Manage Event Button Section (Right) */}
-                            <button
-                                onClick={() => handleManageClick(event.id)}
-                                className="ml-4 px-3 py-1 text-xs font-medium text-gray-900 bg-orange-400 rounded hover:bg-orange-500 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-opacity-50 flex-shrink-0"
-                                title="View registrations and event details"
-                            >
-                                Manage
-                            </button>
+                            {/* Action Buttons Section (Right) */}
+                            <div className="flex space-x-2 ml-4 flex-shrink-0">
+                                
+                                {/* 1. View Registrations Button (Eye Icon) */}
+                                <button
+                                    onClick={() => onViewRegistrations(event.id)}
+                                    className="p-2 text-gray-300 bg-gray-700 rounded hover:bg-green-600 hover:text-white transition duration-150 ease-in-out"
+                                    title="View Event Registrations"
+                                >
+                                    <EyeIcon className="w-4 h-4" />
+                                </button>
+
+                                {/* 2. Edit Event Button (Pencil Icon) */}
+                                <button
+                                    onClick={() => onEditEvent(event.id)}
+                                    className="p-2 text-gray-900 bg-orange-400 rounded hover:bg-orange-500 transition duration-150 ease-in-out focus:outline-none focus:ring-2 focus:ring-orange-400 focus:ring-opacity-50"
+                                    title="Edit Event Details"
+                                >
+                                    <PencilIcon className="w-4 h-4" />
+                                </button>
+                                
+                            </div>
                         </div>
                     ))
                 ) : (

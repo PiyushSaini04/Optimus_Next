@@ -3,6 +3,21 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* globals.css */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1f2937; /* gray-800 */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #16a34a; /* green-600 */
+  border-radius: 10px;
+}
+
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

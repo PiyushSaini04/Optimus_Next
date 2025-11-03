@@ -2,16 +2,17 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import supabaset from '@/api/client'; // Assuming this is your Supabase client
-import { Button } from '@/components/ui/button'; // Assuming you have a button component
-import { Input } from '@/components/ui/input'; // Assuming you have an input component
-import { Label } from '@/components/ui/label'; // Assuming you have a label component
+import supabaset from '@/api/client'; // Your Supabase client instance
+import { Button } from '@/components/ui/button'; // Your Button component (e.g., shadcn/ui)
+import { Input } from '@/components/ui/input'; // Your Input component (e.g., shadcn/ui)
+import { Label } from '@/components/ui/label'; // Your Label component (e.g., shadcn/ui)
 import Image from 'next/image';
 
-// Define the structure of the data you'll fetch/update
+// --- Type Definitions ---
 interface ProfileUpdateData {
     name: string | null;
     avatar_url: string | null;
+    phone_number: string | null; // Phone number is now managed here
 }
 
 interface ProfileSettingsFormProps {
@@ -24,12 +25,17 @@ const ProfileSettingsForm: React.FC<ProfileSettingsFormProps> = ({ userId, onUpd
     const [profileData, setProfileData] = useState<ProfileUpdateData>({
         name: '',
         avatar_url: '',
+        phone_number: '', // Initialize phone_number state
     });
+    
     // State to hold the email, fetched separately but not editable
     const [email, setEmail] = useState<string>(''); 
+    // State to manage loading/submission UI
     const [isLoading, setIsLoading] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
+    
+    // State for user feedback
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
     
@@ -40,35 +46,43 @@ const ProfileSettingsForm: React.FC<ProfileSettingsFormProps> = ({ userId, onUpd
             setIsLoading(true);
             setError(null);
             
-            // 1. Get Auth User Data (for email)
-            const { data: { user } } = await supabase.auth.getUser();
-            if (user?.email) {
-                setEmail(user.email);
-            }
+            try {
+                // 1. Get Auth User Data (for email)
+                const { data: { user } } = await supabase.auth.getUser();
+                if (user?.email) {
+                    setEmail(user.email);
+                }
 
-            // 2. Fetch Profile Table Data (for name and avatar_url)
-            const { data, error: profileError } = await supabase
-                .from('profiles')
-                .select('name, avatar_url')
-                .eq('uuid', userId)
-                .single();
+                // 2. Fetch Profile Table Data (for name, avatar_url, phone_number)
+                const { data, error: profileError } = await supabase
+                    .from('profiles')
+                    .select('name, avatar_url, phone_number') // Select phone_number
+                    .eq('uuid', userId)
+                    .single();
 
-            if (profileError) {
-                console.error('Error fetching profile:', profileError);
+                if (profileError) {
+                    throw profileError;
+                }
+                
+                if (data) {
+                    setProfileData({
+                        name: data.name ?? '',
+                        avatar_url: data.avatar_url ?? '',
+                        phone_number: data.phone_number ?? '', // Set phone_number
+                    });
+                } 
+            } catch (err: any) {
+                console.error('Error fetching profile:', err);
                 setError('Failed to load profile data.');
-            } else if (data) {
-                setProfileData({
-                    name: data.name ?? '',
-                    avatar_url: data.avatar_url ?? '',
-                });
-            } 
-            setIsLoading(false);
+            } finally {
+                setIsLoading(false);
+            }
         };
 
         fetchUserData();
     }, [userId, supabase]);
 
-    // --- Avatar Upload Logic ---
+    // --- Avatar Upload Logic (Simplified: Phone update removed) ---
     const handleAvatarUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
         try {
             if (!userId) {
@@ -81,13 +95,14 @@ const ProfileSettingsForm: React.FC<ProfileSettingsFormProps> = ({ userId, onUpd
 
             setIsUploading(true);
             setError(null);
+            setSuccess(null);
 
             // Generate a unique file path for the storage bucket
             const fileExt = file.name.split('.').pop();
             const filePath = `${userId}/${Date.now()}.${fileExt}`;
-            
-            // Upload the file to the 'avatars' bucket
-            const { error: uploadError, data: uploadData } = await supabase.storage
+
+            // 1. Upload the file to the 'avatars' bucket
+            const { error: uploadError } = await supabase.storage
                 .from('avatars')
                 .upload(filePath, file);
 
@@ -95,14 +110,14 @@ const ProfileSettingsForm: React.FC<ProfileSettingsFormProps> = ({ userId, onUpd
                 throw uploadError;
             }
 
-            // Get the public URL for the newly uploaded file
+            // 2. Get the public URL
             const { data: publicUrlData } = supabase.storage
                 .from('avatars')
                 .getPublicUrl(filePath);
 
             const newAvatarUrl = publicUrlData.publicUrl;
 
-            // Update the profile with the new avatar URL
+            // 3. Update the profile with the new avatar URL
             const { error: updateError } = await supabase
                 .from('profiles')
                 .update({ avatar_url: newAvatarUrl })
@@ -111,7 +126,7 @@ const ProfileSettingsForm: React.FC<ProfileSettingsFormProps> = ({ userId, onUpd
             if (updateError) {
                 throw updateError;
             }
-            
+
             // Update local state and show success
             setProfileData(prev => ({ ...prev, avatar_url: newAvatarUrl }));
             setSuccess('Avatar updated successfully!');
@@ -124,11 +139,12 @@ const ProfileSettingsForm: React.FC<ProfileSettingsFormProps> = ({ userId, onUpd
         }
     };
 
-    // --- Form Handling for Name Update ---
+    // --- Form Handling for Name and Phone Number Update ---
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { id, value } = e.target;
         setProfileData(prev => ({
             ...prev,
+            // Uses the input id ('name' or 'phone_number') to dynamically update state
             [id]: value
         }));
         setSuccess(null); 
@@ -141,10 +157,16 @@ const ProfileSettingsForm: React.FC<ProfileSettingsFormProps> = ({ userId, onUpd
         setError(null);
         setSuccess(null);
         
-        // Only submit the fields that are left (name and avatar_url)
+        // Payload includes name and phone_number
+        const updatePayload: Partial<ProfileUpdateData> = {
+            name: profileData.name,
+            phone_number: profileData.phone_number,
+            // avatar_url is updated separately in handleAvatarUpload
+        };
+
         const { error: updateError } = await supabase
             .from('profiles')
-            .update({ name: profileData.name }) // avatar_url is updated in handleAvatarUpload
+            .update(updatePayload)
             .eq('uuid', userId); 
 
         if (updateError) {
@@ -180,9 +202,9 @@ const ProfileSettingsForm: React.FC<ProfileSettingsFormProps> = ({ userId, onUpd
                         id="email" 
                         type="email" 
                         value={email}
-                        readOnly // Makes the field non-editable
-                        disabled // Visually indicates it's non-editable
-                        className="mt-1 bg-gray-800 border-gray-700"
+                        readOnly 
+                        disabled 
+                        className="mt-1 bg-gray-800 border-gray-700 text-gray-400"
                     />
                 </div>
 
@@ -198,6 +220,19 @@ const ProfileSettingsForm: React.FC<ProfileSettingsFormProps> = ({ userId, onUpd
                     />
                 </div>
                 
+                {/* Phone Number Field */}
+                <div>
+                    <Label htmlFor="phone_number" className="text-gray-300">Phone Number</Label>
+                    <Input 
+                        id="phone_number" // Matches the key in profileData state
+                        type="tel" // Use type="tel" for phone numbers
+                        value={profileData.phone_number || ''} 
+                        onChange={handleChange} 
+                        className="mt-1"
+                        placeholder="e.g., +1 555 123 4567"
+                    />
+                </div>
+
                 {/* Avatar Upload Field */}
                 <div>
                     <Label className="text-gray-300 block mb-2">Profile Picture</Label>
@@ -224,17 +259,17 @@ const ProfileSettingsForm: React.FC<ProfileSettingsFormProps> = ({ userId, onUpd
                     />
                     {isUploading && <p className="text-sm text-green-400 mt-1">Uploading...</p>}
                     <p className="text-xs text-gray-400 mt-1">
-                        Upload a new file. This will automatically update your profile.
+                        Upload a new file. This will automatically update your profile picture.
                     </p>
                 </div>
                 
-                {/* Submit Button (Only handles name change now) */}
+                {/* Submit Button (Handles Name and Phone number change) */}
                 <Button 
                     type="submit" 
                     disabled={isSubmitting || isUploading}
                     className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-2 transition duration-150"
                 >
-                    {isSubmitting ? 'Saving Name...' : 'Update Name'}
+                    {isSubmitting ? 'Saving Profile...' : 'Update Name & Phone'}
                 </Button>
             </form>
         </div>

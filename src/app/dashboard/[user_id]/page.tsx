@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import supabase from '@/api/client'; 
 import { Button } from '@/components/ui/button'; 
 import { useRouter } from 'next/navigation';
@@ -9,6 +9,12 @@ import OrganizationBox from '@/components/dashboard/OrganizationBox';
 import UpcomingEventBox from '@/components/dashboard/UpcomingEventBox';
 import ParticipatedEventsList from '@/components/dashboard/ParticipatedEventsList';
 import HostedEventsList from '@/components/dashboard/HostedEventsList';
+
+// --- NEW IMPORTS for Edit/View Components (Placeholders below) ---
+import EventEditForm from '@/components/dashboard/hostevent/EventEditForm';
+import EventRegistrationsView from '@/components/dashboard/hostevent/EventRegistrationsView';
+// -----------------------------------------------------------------
+
 
 interface Profile {
     uuid: string;
@@ -23,14 +29,18 @@ interface Organization {
     details: string;
 }
 
-// 🔑 Updated Event interface to support both participated and hosted data
+// 🔑 Event interface
 interface Event {
-    id: string;      // The event's ID (public.events.id)
-    name: string;    // event title
-    date: string;    // Display date
+    id: string; 
+    name: string;
+    date: string;
     type: 'Participated' | 'Hosted';
-    ticket_uid?: string; // Required only for participated events
+    ticket_uid?: string;
 }
+
+// --- NEW: Define Active Mode Type ---
+type DashboardMode = 'list' | 'edit' | 'registrations';
+// -----------------------------------
 
 
 interface CreateEventButtonProps {
@@ -67,14 +77,41 @@ const DashboardPage = () => {
     const [hostedEvents, setHostedEvents] = useState<Event[]>([]);
 
     const [loading, setLoading] = useState(true);
+    
+    // --- NEW STATE: To manage the dashboard's current view ---
+    const [activeMode, setActiveMode] = useState<DashboardMode>('list');
+    const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
 
-    // 🎯 FIX 1: Ensure userId is used for filtering, not profile.uuid (which can be stale/undefined)
-   // Located in DashboardPage.tsx
+
+    // --- NEW: Handler functions for HostedEventsList actions ---
+
+    const handleEditEvent = useCallback((eventId: string) => {
+        setSelectedEventId(eventId);
+        setActiveMode('edit');
+        console.log(`Switching to Edit mode for Event ID: ${eventId}`);
+    }, []);
+
+    const handleViewRegistrations = useCallback((eventId: string) => {
+        setSelectedEventId(eventId);
+        setActiveMode('registrations');
+        console.log(`Switching to Registrations View for Event ID: ${eventId}`);
+    }, []);
+    
+    const handleBackToList = useCallback(() => {
+        setSelectedEventId(null);
+        setActiveMode('list');
+        // Optional: Re-fetch hosted events data after a successful edit/update
+        // if (profile?.uuid) {
+        //     fetchHostedEvents(profile.uuid).then(setHostedEvents);
+        // }
+    }, []);
+
+    // -------------------------------------------------------------
+
 
     const fetchParticipatedEvents = async (userId: string) => {
         const { data, error } = await supabase
             .from('event_registrations')
-            // 🚨 FIX: Removed comments and ensured selection syntax is clean
             .select(`
                 ticket_uid,
                 event_id:events (
@@ -86,7 +123,6 @@ const DashboardPage = () => {
             .eq('user_id', userId); 
 
         if (error) {
-            // You should see a clean error message here if RLS or other issues exist
             console.error("Supabase Participated Events Fetch Error:", error.message);
             return [];
         }
@@ -96,7 +132,6 @@ const DashboardPage = () => {
             return [];
         }
 
-        // Mapping logic remains correct based on the 'event_id' relationship
         return data.map((item: any) => ({
             id: item.event_id.id,
             name: item.event_id.title, 
@@ -106,12 +141,11 @@ const DashboardPage = () => {
         }));
     };
     
-    // Hosted Events function remains correct, as it uses the passed userId
     const fetchHostedEvents = async (userId: string) => {
         const { data, error } = await supabase
             .from('events')
-            .select(`id, title, start_date`) // Selecting title and start_date
-            .eq('created_by', userId) // FILTERING BY 'created_by'
+            .select(`id, title, start_date`)
+            .eq('created_by', userId)
             .order('start_date', { ascending: true });
             
         if (error) {
@@ -121,8 +155,8 @@ const DashboardPage = () => {
 
         return data.map((item: any) => ({
             id: item.id,
-            name: item.title, // Map 'title' to 'name'
-            date: new Date(item.start_date).toLocaleDateString(), // Use start_date for display
+            name: item.title,
+            date: new Date(item.start_date).toLocaleDateString(),
             type: 'Hosted' as const,
         }));
     };
@@ -174,12 +208,11 @@ const DashboardPage = () => {
                 }
                 
                 // --- 2. Fetch Event Data (Participated & Hosted) ---
-                const pEvents = await fetchParticipatedEvents(userId); // Passing userId
+                const pEvents = await fetchParticipatedEvents(userId);
                 setParticipatedEvents(pEvents);
                 
-                const hEvents = await fetchHostedEvents(userId); // Passing userId
+                const hEvents = await fetchHostedEvents(userId);
                 setHostedEvents(hEvents);
-                
             }
             
             setLoading(false);
@@ -219,8 +252,39 @@ const DashboardPage = () => {
             <p className="text-red-400">Error: Profile data could not be loaded. Please log in again.</p>
         </div>
     );
+    
+    // --- RENDER LOGIC BASED ON ACTIVE MODE ---
 
+    if (activeMode === 'edit' && selectedEventId) {
+        return (
+            <div className="p-4 sm:p-6 lg:p-10 bg-gray-900 min-h-screen">
+                <EventEditForm 
+                    eventId={selectedEventId} 
+                    onCancel={handleBackToList} 
+                    // Pass a function to refresh the hosted events list after a successful update
+                    onEventUpdated={() => {
+                        handleBackToList(); // Go back to the list
+                        if (profile?.uuid) {
+                            fetchHostedEvents(profile.uuid).then(setHostedEvents);
+                        }
+                    }}
+                />
+            </div>
+        );
+    }
+    
+    if (activeMode === 'registrations' && selectedEventId) {
+        return (
+            <div className="p-4 sm:p-6 lg:p-10 bg-gray-900 min-h-screen">
+                <EventRegistrationsView 
+                    eventId={selectedEventId} 
+                    onBack={handleBackToList}
+                />
+            </div>
+        );
+    }
 
+    // Default 'list' mode rendering
     return (
         <div className="p-4 sm:p-6 lg:p-10 bg-gray-900">
             <div className='flex items-center justify-between mb-8'>
@@ -235,14 +299,22 @@ const DashboardPage = () => {
             <div className="grid grid-cols-12 gap-6 mb-8">
                 
                 <div className="col-span-12 md:col-span-4 lg:col-span-3 bg-gray-800/90 border border-gray-700 p-6 rounded-xl shadow-lg h-full">
-                    <h2 className="text-lg font-semibold mb-4 text-green-400 border-b border-gray-700 pb-2">User Profile</h2>
+                    <h2 className="text-xl font-semibold mb-4 text-green-400 border-b border-gray-700 pb-2">Profile</h2>
                     <div className="flex items-center space-x-4">
                         <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center text-xl font-bold text-white">
-                            {profile.name[0] || 'U'}
+                            {profile.avatar_url ? (
+                                <img 
+                                    src={profile.avatar_url}
+                                    alt="User Avatar"
+                                    className="w-16 h-16 rounded-full object-cover border-2 border-green-400"
+                                />  
+                            ) : (
+                                profile.name.charAt(0).toUpperCase()
+                            )}
                         </div>
                         <div className="min-w-0"> 
                             <p className="font-bold text-lg text-white truncate">{profile.name}</p> 
-                            <p className="text-sm text-gray-300 truncate">{profile.email}</p>     
+                            <p className="text-sm text-gray-300 truncate">{profile.email}</p>     
                         </div>
                     </div>
                 </div>
@@ -255,7 +327,6 @@ const DashboardPage = () => {
                                 hosted={HOSTED_COUNT}
                             />
                         <div className="col-span-3 lg:col-span-4 pt-6">
-                            {/* 🎯 FIX 2: Pass the organization prop */}
                             <OrganizationBox /> 
                         </div>
                         </div>
@@ -274,7 +345,6 @@ const DashboardPage = () => {
 
             <div className="grid grid-cols-12 gap-6">
                 
-                
                 <div className="col-span-12 md:col-span-6 lg:col-span-4">
                     <ParticipatedEventsList 
                         events={participatedEvents as any} 
@@ -283,10 +353,14 @@ const DashboardPage = () => {
                 </div>
                 
                 <div className="col-span-12 md:col-span-6 lg:col-span-4">
+                    {/* --- UPDATED: Passing the new handlers --- */}
                     <HostedEventsList 
                         events={hostedEvents} 
                         title="List of Events Hosted" 
+                        onEditEvent={handleEditEvent}
+                        onViewRegistrations={handleViewRegistrations}
                     />
+                    {/* -------------------------------------- */}
                 </div>
             </div>
         </div>

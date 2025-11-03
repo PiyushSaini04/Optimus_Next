@@ -309,14 +309,14 @@ export default function Home() {
         <div className="flex flex-col sm:flex-row gap-4 relative z-10 animate-fade-in-up mb-8">
           <Button
             size="lg"
-            onClick={() => router.push('/create-event')}
+            onClick={() => router.push('/event-page')}
             className="bg-green-600 hover:bg-green-700 text-white hover-lift text-lg sm:text-xl font-bold shadow-lg px-6 py-3"
           >
             Want to Host?
           </Button>
           <Button
             size="lg"
-            onClick={() => router.push('/event-hub')}
+            onClick={() => router.push('/event-page')}
             className="bg-green-600 hover:bg-green-700 hover-lift text-white text-lg sm:text-xl font-bold shadow-lg px-6 py-3"
           >
             Want to Attend?
@@ -326,7 +326,7 @@ export default function Home() {
         <div className="flex justify-center relative z-10 animate-fade-in-up">
           <Button
             size="lg"
-            onClick={() => router.push('/join-us')}
+            onClick={() => router.push('/form/joinus')}
             className="bg-gradient-to-r from-green-600 to-green-700 text-white hover:from-green-700 hover:to-green-800 hover-lift shadow-lg px-6 py-3"
           >
             {heroSlides[currentSlide].cta} <ArrowRight className="ml-2 w-5 h-5" />
@@ -543,7 +543,7 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
               size="lg"
-              onClick={() => router.push('/join-us')}
+              onClick={() => router.push('/form/joinus')}
               className="bg-white text-green-600 hover:bg-gray-100 hover-lift shadow-lg font-bold"
             >
               Get Started Now <ArrowRight className="ml-2 w-5 h-5" />

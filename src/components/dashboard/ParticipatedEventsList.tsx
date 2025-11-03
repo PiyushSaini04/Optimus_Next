@@ -1,4 +1,3 @@
-// components/Dashboard/ParticipatedEventsList.tsx
 import React, { useState } from 'react';
 
 interface Event {
@@ -30,9 +29,12 @@ const ParticipatedEventsList: React.FC<EventListProps> = ({ events, title }) => 
 
     return (
         <>
-            <div className="bg-gray-800/90 border border-gray-700 p-6 rounded-xl shadow-sm">
+            {/* The main container now includes custom scrollbar classes */}
+            <div className="bg-gray-800/90 border border-gray-700 p-6 rounded-xl shadow-sm h-full overflow-y-scroll scrollbar-thin scrollbar-thumb-green-600 scrollbar-track-gray-900">
+                
                 <h2 className="text-lg font-semibold text-green-400 border-b border-gray-700 pb-2 mb-4">{title}</h2>
 
+                {/* The inner list container */}
                 <div className="space-y-4 max-h-96 overflow-y-auto pr-2">
                     {events.length > 0 ? (
                         events.map((event) => (

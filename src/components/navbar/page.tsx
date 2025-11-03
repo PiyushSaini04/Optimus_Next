@@ -9,6 +9,7 @@ import { createClient } from '@supabase/supabase-js'; // Assuming your client ut
 import supabaset from '@/api/client'; // Corrected import name: supabaset
 import AuthContent from '@/components/auth/Auth';
 import ProfileSettingsForm from '@/components/form/profilesetting/ProfileSettingsForm';
+import Logo from '../../../public/optimuslogo.png';
 import {
     Dialog,
     DialogTrigger,
@@ -191,8 +192,10 @@ const Navbar: React.FC = () => {
 
                     {/* Logo and App Name (omitted for brevity) */}
                     <div className="flex items-center">
-                        <div className="flex-shrink-0 bg-green-600 rounded-full h-8 w-8 flex items-center justify-center text-white font-bold text-lg mr-2"> O </div>
-                        <span className="text-white text-xl font-semibold tracking-wider"> Optimus </span>
+                        {/* <div className="flex-shrink-0 bg-green-600 rounded-full h-8 w-8 flex items-center justify-center text-white font-bold text-lg mr-2"> O </div>
+                        <span className="text-white text-xl font-semibold tracking-wider"> Optimus </span> */}
+
+                        <img src={Logo.src} alt="Optimus Logo" style={{ width: 'auto', height: '60px' }} />
                     </div>
 
                     <div className="flex-1 flex justify-center">

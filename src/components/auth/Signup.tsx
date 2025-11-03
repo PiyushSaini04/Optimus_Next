@@ -32,63 +32,35 @@ const Signup: React.FC<AuthComponentProps> = ({ onSuccess }) => {
 
     try {
       const { data, error } = await client.auth.signUp({
-        email, 
+        email,
         password,
         options: {
-          data: {
-            full_name: name,
-          }
+          data: { full_name: name } // Used by trigger
         }
       });
 
       if (error) {
         toast.error(`Signup failed: ${error.message}`);
+        setLoading(false);
         return;
       }
 
       if (data.user) {
-        
-        const newUserId = data.user.id; 
-        
-        const { error: profileError } = await client
-          .from('profiles')
-          .insert([
-            {
-              uuid: newUserId,
-              name: name,
-              email: email,
-              role_type: 'user', 
-            },
-          ]);
-        
-        if (profileError) {
-            console.error('Profile creation failed:', profileError);
-            toast.error('Account created, but profile data failed to save.'); 
-        }
-
-        if (data.session === null) {
-          toast.success('Registration successful! Please check your email for a confirmation link.');
+        if (!data.session) {
+          toast.success('Registration successful! Please check your email to confirm.');
         } else {
           toast.success('Signup successful! Welcome.');
-          onSuccess(); 
+          onSuccess();
         }
-        
-        setEmail('');
-        setPassword('');
-        setName('');
-        setconfirmPassword('');
-        
-      } else if (data.session === null && data.user === null) {
-        toast.success('Registration successful! Please check your email for a confirmation link.');
       }
-
     } catch (err) {
-      toast.error('An unexpected error occurred during signup.');
       console.error(err);
+      toast.error('Unexpected error during signup.');
     } finally {
       setLoading(false);
-    }  
-  }
+    }
+  };
+
 
   return (
     <Card className="w-[350px] bg-gray-800/90 border-gray-700">

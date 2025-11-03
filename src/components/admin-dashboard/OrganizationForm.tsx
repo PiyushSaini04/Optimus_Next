@@ -81,9 +81,9 @@ export default function OrganizationForm({ table, initialData, onSuccess, onCanc
                 <div>
                     <label className="block text-sm font-medium text-gray-300">Status</label>
                     <select name="status" value={formData.status} onChange={handleChange} className="mt-1 block w-full bg-gray-800 border border-gray-700 text-white rounded-md shadow-sm p-2">
-                        <option value="Active">Active</option>
                         <option value="Pending">Pending</option>
-                        <option value="Suspended">Suspended</option>
+                        <option value="approved">Approved</option>
+                        <option value="rejected">Reject</option>
                     </select>
                 </div>
 

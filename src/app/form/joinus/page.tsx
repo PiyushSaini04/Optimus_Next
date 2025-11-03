@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useState, FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
+import { ArrowLeft } from 'lucide-react';
 import createClient from '@/api/client';
 import { RecruitmentApplication } from '@/lib/types/recruitment';
 
@@ -104,6 +106,7 @@ const SelectField: React.FC<SelectFieldProps> = ({ label, name, required = false
 // 🏁 Main Component
 // =========================================================
 export default function Page() {
+  const router = useRouter();
   const [formData, setFormData] = useState<RecruitmentApplication>(initialFormState);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitMessage, setSubmitMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
@@ -184,6 +187,12 @@ export default function Page() {
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-gray-800/90 border border-gray-700 shadow-xl rounded-xl">
+      <button
+                    onClick={() => router.push('/home')}
+                    className="mt-6 text-green-400 hover:text-green-500 flex items-center"
+                >
+                    <ArrowLeft className="w-4 h-4 mr-2" /> Back
+                </button>
       <h1 className="text-4xl md:text-5xl font-extrabold lowercase text-center text-green-400 mb-8 border-b border-gray-700 pb-3">
         Optimus Membership Application 🚀
       </h1>
