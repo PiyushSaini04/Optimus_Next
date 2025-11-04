@@ -87,3 +87,38 @@ export interface Recruitment {
   areas_of_interest?: string[]; // Assuming _text array
   created_at: string;
 }
+
+// src/types/supabase.ts
+export interface Database {
+  public: {
+    Tables: {
+      event_form_fields: {
+        Row: {
+          id: string;
+          event_id: string;
+          field_name: string;
+          field_type: string;
+          is_required: boolean;
+          options: string | null;
+          order: number | null;
+        };
+        Insert: {
+          id?: string;
+          event_id: string;
+          field_name: string;
+          field_type: string;
+          is_required: boolean;
+          options?: string | null;
+          order?: number | null;
+        };
+        Update: {
+          field_name?: string;
+          field_type?: string;
+          is_required?: boolean;
+          options?: string | null;
+          order?: number | null;
+        };
+      };
+    };
+  };
+}

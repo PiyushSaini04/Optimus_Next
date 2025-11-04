@@ -6,6 +6,7 @@ import { AuthProvider } from "@/components/context/authprovider";
 import React from 'react';
 import { Toaster } from 'sonner';
 import BottomNavbar from "@/components/navbar/bottomNavbar";
+import Footer from "@/components/footer/footer";
 import dynamic from 'next/dynamic'; // <-- Import dynamic
 
 // 1. Dynamically import the Navbar with SSR disabled
@@ -30,6 +31,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <DynamicNavbar />
           {children}
           <BottomNavbar />
+          <Footer />
         </AuthProvider>
         <Toaster position="top-right" richColors />
       </body>

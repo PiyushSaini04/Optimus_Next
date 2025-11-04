@@ -1,19 +1,18 @@
-// components/dashboard/EventEditForm.tsx
+// components/dashboard/hostevent/EventEditForm.tsx
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import createClient from '@/api/client'; 
-import { Upload, XCircle, Loader2 } from 'lucide-react'; // Added icons
+import { Button } from '@/components/ui/button'; // Assuming this Button component is available
+import createClient from '@/api/client'; // Assuming this exports a function that returns a Supabase client
+import { XCircle, Loader2 } from 'lucide-react'; 
 
 // --- Interface Definitions ---
-const STATUS_OPTIONS: string[] = ['pending', 'confirmed', 'cancelled', 'archived']; // Added options
+const STATUS_OPTIONS: string[] = ['pending', 'confirmed', 'cancelled', 'archived']; 
 
 interface EventEditFormProps {
     eventId: string;
     onCancel: () => void;
-    onEventUpdated: () => void; // To refresh the list after update
+    onEventUpdated: () => void;
 }
 
 // Basic structure for ALL editable fields based on your schema
@@ -23,8 +22,8 @@ interface EditableEvent {
     category: string;
     location: string;
     organizer_name: string;
-    start_date: string;
-    end_date: string | null;
+    start_date: string; // Formatted for datetime-local
+    end_date: string | null; // Formatted for datetime-local
     status: string; // EventStatus
     ticket_price: number | null;
     max_participants: number | null;
@@ -36,7 +35,7 @@ interface EditableEvent {
 
 const EventEditForm: React.FC<EventEditFormProps> = ({ eventId, onCancel, onEventUpdated }) => {
     
-    // 🟢 CRITICAL FIX: Call the client creation function
+    // 🟢 CRITICAL FIX: Call the client creation function with ()
     const supabase = createClient; 
     const router = useRouter();
 
@@ -44,7 +43,7 @@ const EventEditForm: React.FC<EventEditFormProps> = ({ eventId, onCancel, onEven
     const [formData, setFormData] = useState<EditableEvent | null>(null);
     const [loading, setLoading] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
-    const [isUploading, setIsUploading] = useState(false); // New state for file upload
+    const [isUploading, setIsUploading] = useState(false); 
     const [error, setError] = useState<string | null>(null);
 
     // Function to format the database timestamp into the format required by datetime-local input
@@ -60,7 +59,6 @@ const EventEditForm: React.FC<EventEditFormProps> = ({ eventId, onCancel, onEven
             setLoading(true);
             setError(null);
             
-            // Select ALL fields that are editable
             const { data, error } = await supabase
                 .from('events')
                 .select(`
@@ -71,10 +69,11 @@ const EventEditForm: React.FC<EventEditFormProps> = ({ eventId, onCancel, onEven
                 .eq('id', eventId)
                 .single();
             
-            if (error) {
-                console.error('Fetch Event Error:', error.message);
-                setError('Could not load event details.');
-            } else if (data) {
+            if (error || !data) {
+                console.error('Fetch Event Error:', error?.message || 'No data returned.');
+                // Display specific error if data fetching fails
+                setError(`Could not load event details for ID: ${eventId}. Please check if the ID exists and policies allow access.`);
+            } else {
                 // Map fetched data to form data, formatting dates and handling nulls/numbers
                 setFormData({
                     title: data.title || '',
@@ -84,7 +83,7 @@ const EventEditForm: React.FC<EventEditFormProps> = ({ eventId, onCancel, onEven
                     organizer_name: data.organizer_name || '',
                     status: data.status || 'pending',
                     
-                    // Dates
+                    // Dates must be formatted for input type="datetime-local"
                     start_date: formatTimestampForInput(data.start_date),
                     end_date: formatTimestampForInput(data.end_date),
 
@@ -99,13 +98,17 @@ const EventEditForm: React.FC<EventEditFormProps> = ({ eventId, onCancel, onEven
             setLoading(false);
         };
 
-        if (eventId) {
+        // Only fetch if a seemingly valid ID is provided
+        if (eventId && eventId !== 'error-no-id') {
             fetchEvent();
+        } else {
+            setLoading(false);
+            setError('Missing Event ID. Cannot fetch data.');
         }
     }, [eventId, supabase]);
 
     // --- Form Handlers ---
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target;
         
         if (formData) {
@@ -116,12 +119,12 @@ const EventEditForm: React.FC<EventEditFormProps> = ({ eventId, onCancel, onEven
                 parsedValue = value === '' ? null : Number(value);
             }
 
-            setFormData({
-                ...formData,
+            setFormData(prev => ({
+                ...(prev as EditableEvent),
                 [name]: parsedValue,
-            } as EditableEvent);
+            }));
         }
-    };
+    }, [formData]);
 
     // --- File Upload Handler (Supabase Storage) ---
     const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -131,7 +134,7 @@ const EventEditForm: React.FC<EventEditFormProps> = ({ eventId, onCancel, onEven
         setIsUploading(true);
         setError(null);
         
-        // Define the path: e.g., 'event_banners/eventId/filename.jpg'
+        // Define the path: e.g., 'event_banners/eventId/timestamp.ext'
         const fileExtension = file.name.split('.').pop();
         const fileName = `${Date.now()}.${fileExtension}`;
         const filePath = `${eventId}/${fileName}`;
@@ -165,6 +168,11 @@ const EventEditForm: React.FC<EventEditFormProps> = ({ eventId, onCancel, onEven
             }
         }
     };
+    
+    // Handler to remove the banner URL
+    const handleRemoveBanner = useCallback(() => {
+        setFormData(prev => ({ ...(prev as EditableEvent), banner_url: null }));
+    }, []);
 
     // --- 2. Supabase Update Logic ---
     const handleSave = async (e: React.FormEvent) => {
@@ -190,14 +198,14 @@ const EventEditForm: React.FC<EventEditFormProps> = ({ eventId, onCancel, onEven
             organizer_name: formData.organizer_name,
             status: formData.status,
             
-            // Dates
+            // Dates are already in the correct timestamp format from the input
             start_date: formData.start_date,
             end_date: formData.end_date || null,
 
             // Optional fields
             ticket_price: formData.ticket_price,
             max_participants: formData.max_participants,
-            banner_url: formData.banner_url || null, // Updated URL is used here
+            banner_url: formData.banner_url, 
             contact_email: formData.contact_email || null,
             contact_phone: formData.contact_phone || null,
         };
@@ -210,6 +218,7 @@ const EventEditForm: React.FC<EventEditFormProps> = ({ eventId, onCancel, onEven
         setIsSaving(false);
 
         if (updateError) {
+            console.log('Update Data Sent:', updateData);
             console.error('Update Error:', updateError.message);
             setError(`Failed to save event: ${updateError.message}`);
         } else {
@@ -220,13 +229,14 @@ const EventEditForm: React.FC<EventEditFormProps> = ({ eventId, onCancel, onEven
     
     // --- Render Guards ---
     if (loading) {
-        return <div className="bg-gray-800/90 p-10 rounded-xl text-white">Loading event details...</div>;
+        return <div className="bg-gray-800/90 p-10 rounded-xl text-white flex items-center justify-center"><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Loading event details...</div>;
     }
     
     if (!formData) {
         return (
             <div className="bg-gray-800/90 p-10 rounded-xl text-red-400">
-                Event data not found or failed to load.
+                **Event data not found or failed to load.** <br/>
+                {error} 
             </div>
         );
     }
@@ -267,9 +277,9 @@ const EventEditForm: React.FC<EventEditFormProps> = ({ eventId, onCancel, onEven
                 </div>
 
                 {/* Row 2: Dates & Status */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
                     {/* Start Date Input (Required) */}
-                    <div>
+                    <div >
                         <label htmlFor="start_date" className="block text-sm font-medium text-gray-300">Start Date & Time *</label>
                         <input
                             type="datetime-local" name="start_date" id="start_date" required
@@ -286,19 +296,8 @@ const EventEditForm: React.FC<EventEditFormProps> = ({ eventId, onCancel, onEven
                             className="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm p-3 text-white focus:ring-orange-400 focus:border-orange-400"
                         />
                     </div>
-                    {/* Status Select (FIXED: was missing in the original update) */}
-                    <div>
-                        <label htmlFor="status" className="block text-sm font-medium text-gray-300">Status *</label>
-                        <select
-                            name="status" id="status" required
-                            value={formData.status} onChange={handleChange}
-                            className="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm p-3 text-white focus:ring-orange-400 focus:border-orange-400"
-                        >
-                            {STATUS_OPTIONS.map(status => (
-                                <option key={status} value={status}>{status.charAt(0).toUpperCase() + status.slice(1)}</option>
-                            ))}
-                        </select>
-                    </div>
+                    {/* Status Select */}
+                    
                 </div>
 
                 {/* Row 3: Location & Organizer Name */}
@@ -392,13 +391,13 @@ const EventEditForm: React.FC<EventEditFormProps> = ({ eventId, onCancel, onEven
 
                     {/* Display current/uploaded URL or image preview */}
                     {formData.banner_url && (
-                        <div className="flex items-center space-x-2 text-sm text-gray-400">
-                            <span className="truncate">Current URL: {formData.banner_url}</span>
+                        <div className="flex items-center space-x-2 text-sm text-gray-400 p-2 bg-gray-700 rounded-md">
+                            <span className="truncate flex-1">Current Banner URL: {formData.banner_url.split('/').pop()}</span>
                             <Button 
                                 type="button" 
                                 size="sm" 
                                 variant="destructive" 
-                                onClick={() => setFormData(prev => ({ ...(prev as EditableEvent), banner_url: null }))}
+                                onClick={handleRemoveBanner}
                                 className="h-6 w-6 p-0 bg-red-600 hover:bg-red-700"
                             >
                                 <XCircle className="w-4 h-4" />

@@ -279,64 +279,8 @@ export default function EventDetailsClientContent() {
                 <div className="lg:col-span-2 space-y-8">
                     
                     {/* Card B: About the Event */}
-                    <Card title="About the Event" icon={<List />} className="bg-gray-800/90">
-                        <p className="text-gray-300 text-lg leading-relaxed">
-                            {/* Compelling Nature Hackathon Description */}
-                            {event.description || 
-                                "Join us to code innovative solutions for environmental sustainability, from optimizing renewable energy grids to creating digital tools for conservation. Our challenge focuses on leveraging cutting-edge tech to protect nature's delicate balance."
-                            }
-                        </p>
-                    </Card>
-
-                    {/* Card A: Event Details and Timeline */}
-                    <Card title="Event Details" icon={<Calendar />} className="bg-gray-800/90">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            
-                            {/* Data Table/List */}
-                            <div className="space-y-4">
-                                <h4 className="font-semibold text-white text-lg">Essentials</h4>
-                                <div className="space-y-3">
-                                    <DetailItem icon={<MapPin />} label="Venue" value={event.location} />
-                                    <DetailItem icon={<User />} label="Organized by" value={event.organizer_name} />
-                                    <DetailItem icon={<Clock />} label="Duration" value={duration} />
-                                    <DetailItem icon={<List />} label="Category" value={event.category} />
-                                    <DetailItem icon={<DollarSign />} label="Event Type" value={isPaid ? 'Paid' : 'Free'} />
-                                    <DetailItem icon={<Users />} label="Max Participants" value={event.max_participants} />
-                                </div>
-                            </div>
-                            
-                            {/* Event Timeline */}
-                            <div className="space-y-4">
-                                <h4 className="font-semibold text-white text-lg">Event Timeline</h4>
-                                <div className="p-4 border-l-4 border-green-500 bg-gray-700/50 rounded-md space-y-2">
-                                    <p className="text-gray-300"><span className="font-semibold text-white">Start Date:</span> {formatEventDate(event.start_date)}</p>
-                                    <p className="text-gray-300"><span className="font-semibold text-white">End Date:</span> {formatEventDate(event.end_date)}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </Card>
-
-                    {/* Card C: Why Attend? (Value Proposition) */}
-                    <Card title="Why Attend?" icon={<Check className="text-green-500" />}>
-                        <div className="space-y-5">
-                            {WHY_ATTEND_POINTS.map((point, index) => (
-                                <div key={index} className="flex items-start">
-                                    <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
-                                    <div className="ml-3">
-                                        <p className="font-semibold text-white" dangerouslySetInnerHTML={{ __html: point.title }} />
-                                        <p className="text-gray-400 text-sm" dangerouslySetInnerHTML={{ __html: point.detail.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </Card>
-                </div>
-
-                {/* 3. Registration / CTA Sidebar (Right Column) */}
-                <div className="lg:col-span-1 space-y-8 sticky top-4">
-                    
-                    {/* CTA Sidebar: Registration */}
-                    <div className="p-6 bg-gray-800 border border-green-600 rounded-xl shadow-2xl space-y-4">
+                        
+                        <div className="p-6 bg-gray-800 border border-green-600 rounded-xl shadow-2xl space-y-4">
                         <h3 className="text-2xl font-bold text-white border-b border-gray-700 pb-3">Registration</h3>
                         
                         {/* Ticket Info */}
@@ -365,6 +309,53 @@ export default function EventDetailsClientContent() {
                             <Share2 className="w-5 h-5 mr-2" /> Share Event
                         </button>
                     </div>
+
+                    {/* Card A: Event Details and Timeline */}
+                    <Card title="About the Event" icon={<List />} className="bg-gray-800/90">
+
+                    <p className="text-gray-300 text-lg leading-relaxed">
+                            {/* Compelling Nature Hackathon Description */}
+                            {event.description || 
+                                "Join us to code innovative solutions for environmental sustainability, from optimizing renewable energy grids to creating digital tools for conservation. Our challenge focuses on leveraging cutting-edge tech to protect nature's delicate balance."
+                            }
+                        </p>
+                    </Card>
+                    <Card title="Event Details" icon={<Calendar />} className="bg-gray-800/90">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            
+                            {/* Data Table/List */}
+                            <div className="space-y-4">
+                                <h4 className="font-semibold text-white text-lg">Essentials</h4>
+                                <div className="space-y-3">
+                                    <DetailItem icon={<MapPin />} label="Venue" value={event.location} />
+                                    <DetailItem icon={<User />} label="Organized by" value={event.organizer_name} />
+                                    <DetailItem icon={<Clock />} label="Duration" value={duration} />
+                                    <DetailItem icon={<List />} label="Category" value={event.category} />
+                                    <DetailItem icon={<DollarSign />} label="Event Type" value={isPaid ? 'Paid' : 'Free'} />
+                                    <DetailItem icon={<Users />} label="Max Participants" value={event.max_participants} />
+                                </div>
+                            </div>
+                            
+                            {/* Event Timeline */}
+                            <div className="space-y-4">
+                                <h4 className="font-semibold text-white text-lg">Event Timeline</h4>
+                                <div className="p-4 border-l-4 border-green-500 bg-gray-700/50 rounded-md space-y-2">
+                                    <p className="text-gray-300"><span className="font-semibold text-white">Start Date:</span> {formatEventDate(event.start_date)}</p>
+                                    <p className="text-gray-300"><span className="font-semibold text-white">End Date:</span> {formatEventDate(event.end_date)}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </Card>
+
+                    {/* Card C: Why Attend? (Value Proposition) */}
+                    
+                </div>
+
+                {/* 3. Registration / CTA Sidebar (Right Column) */}
+                <div className="lg:col-span-1 space-y-8 sticky top-4 h-fit">
+                    
+                    {/* CTA Sidebar: Registration */}
+                    
 
                     {/* Card F: Event Information Summary (Chips) */}
                     <Card title="Event Summary" icon={<List />}>
@@ -420,6 +411,22 @@ export default function EventDetailsClientContent() {
                     </Card>
 
                 </div>
+            </div>
+            <div className='px-9'>
+
+                <Card title="Why Attend?" icon={<Check className="text-green-500" />}>
+                        <div className="space-y-5">
+                            {WHY_ATTEND_POINTS.map((point, index) => (
+                                <div key={index} className="flex items-start">
+                                    <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-1" />
+                                    <div className="ml-3">
+                                        <p className="font-semibold text-white" dangerouslySetInnerHTML={{ __html: point.title }} />
+                                        <p className="text-gray-400 text-sm" dangerouslySetInnerHTML={{ __html: point.detail.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </Card>
             </div>
         </div>
     );
